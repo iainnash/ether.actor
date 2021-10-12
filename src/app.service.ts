@@ -11,9 +11,9 @@ import {
   Contract,
   EtherscanProvider,
   BigNumber,
+  isAddress,
 } from 'nestjs-ethers';
 import { Cache } from 'cache-manager';
-
 
 @Injectable()
 export class AppService {
@@ -23,26 +23,36 @@ export class AppService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async getAbi(address: string): Promise<string> {
+  async getAbi(address: string): Promise<object> {
+    if (!isAddress(address)) {
+      throw new NotFoundException('Not an valid address');
+    }
     const cacheKey = `abi:${address.toLowerCase()}`;
-    const abi = await this.cacheManager.get<string>(cacheKey);
+    const abi = await this.cacheManager.get<object>(cacheKey);
     if (abi) {
       return abi;
     }
     try {
+      const code = await this.ethersProvider.getCode(address);
+      if (!code) {
+        throw new NotFoundException('No contract found at address');
+      }
       const etherscanProvider = new EtherscanProvider(
         this.ethersProvider.network,
         process.env.ETHERSCAN_API_KEY,
       );
-      const result = await etherscanProvider.fetch('contract', {
+      const abiResult = await etherscanProvider.fetch('contract', {
         action: 'getabi',
         address,
       });
+      const result = {
+        abi: abiResult,
+      };
       // doesn't ever expire
-      await this.cacheManager.set(cacheKey, result, {ttl: 0});
+      await this.cacheManager.set(cacheKey, result, { ttl: 0 });
       return result;
     } catch (err) {
-      console.error(err)
+      console.error(err);
       throw new NotFoundException('Contract not verified');
     }
   }
@@ -52,12 +62,16 @@ export class AppService {
     fnname: string,
     args: string[],
   ): Promise<any> {
-    const abi = await this.getAbi(address);
-    const contract = new Contract(address, abi, this.ethersProvider);
+    const abiObject = await this.getAbi(address);
+    const contract = new Contract(
+      address,
+      (abiObject as any).abi,
+      this.ethersProvider,
+    );
     try {
       const result = await contract[fnname](...args);
       if (result instanceof BigNumber) {
-        return result.toString()
+        return result.toString();
       }
       return result;
     } catch (err) {
