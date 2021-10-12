@@ -73,7 +73,9 @@ export class AppService {
       if (result instanceof BigNumber) {
         return result.toString();
       }
-      return result;
+      return result.map((item: any) =>
+        item instanceof BigNumber ? item.toString() : item,
+      );
     } catch (err) {
       throw new BadRequestException(
         {
