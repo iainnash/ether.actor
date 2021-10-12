@@ -1,4 +1,6 @@
-import { CacheTTL, Controller, Get, Param, Req, Request } from '@nestjs/common';
+import { isAddress } from '@ethersproject/address';
+import { CacheTTL, Controller, Get, NotFoundException, Param, Req, Request } from '@nestjs/common';
+import { NotFoundError } from 'rxjs';
 import { AppService } from './app.service';
 
 @Controller()
@@ -21,7 +23,10 @@ export class AppController {
   }
 
   @Get('/:contract')
-  async getAbiCall(@Param('contract') contract: string): Promise<string> {
-    return this.appService.getAbi(contract);
+  async getAbiCall(@Param('contract') contract: string): Promise<object> {
+    if (!isAddress(contract)) {
+      throw new NotFoundException({statusCode: 404}, 'Contract not found');
+    }
+    return {abi: await this.appService.getAbi(contract)};
   }
 }
