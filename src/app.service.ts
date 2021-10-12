@@ -25,7 +25,7 @@ export class AppService {
   async getAbi(address: string): Promise<string> {
     const cacheKey = `abi:${address.toLowerCase()}`;
     const abi = await this.cacheManager.get<string>(cacheKey);
-    if (abi !== undefined) {
+    if (abi) {
       return abi;
     }
     try {
@@ -37,9 +37,10 @@ export class AppService {
         action: 'getabi',
         address,
       });
-      await this.cacheManager.set(cacheKey, abi);
+      await this.cacheManager.set(cacheKey, result);
       return result;
     } catch (err) {
+      console.error(err)
       throw new NotFoundException('Contract not verified');
     }
   }

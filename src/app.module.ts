@@ -14,6 +14,10 @@ import * as redisStore from 'cache-manager-redis-store';
     }),
     CacheModule.register({
       store: redisStore,
+      host: process.env.REDISHOST,
+      port: process.env.REDISPORT,
+      user: process.env.REDISUSER,
+      password: process.env.REDISPASSWORD,
     }),
   ],
   controllers: [AppController],
