@@ -1,13 +1,13 @@
-import { isAddress } from '@ethersproject/address';
-import { CacheTTL, Controller, Get, NotFoundException, Param, Req } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL, Controller, Get, NotFoundException, Param, Req, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
+@UseInterceptors(CacheInterceptor)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/:contract/:fnname*')
-  @CacheTTL(25)
+  @CacheTTL(60)
   async getContractCall(
     @Param('contract') contract: string,
     @Param('fnname') fnname: string,
