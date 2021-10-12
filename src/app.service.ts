@@ -10,6 +10,7 @@ import {
   BaseProvider,
   Contract,
   EtherscanProvider,
+  BigNumber,
 } from 'nestjs-ethers';
 import { Cache } from 'cache-manager';
 
@@ -50,11 +51,15 @@ export class AppService {
     address: string,
     fnname: string,
     args: string[],
-  ): Promise<object> {
+  ): Promise<any> {
     const abi = await this.getAbi(address);
     const contract = new Contract(address, abi, this.ethersProvider);
     try {
-      return { data: await contract[fnname](...args) };
+      const result = await contract[fnname](...args);
+      if (result instanceof BigNumber) {
+        return result.toString()
+      }
+      return result;
     } catch (err) {
       throw new BadRequestException(
         {
