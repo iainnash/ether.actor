@@ -37,7 +37,8 @@ export class AppService {
         action: 'getabi',
         address,
       });
-      await this.cacheManager.set(cacheKey, result);
+      // doesn't ever expire
+      await this.cacheManager.set(cacheKey, result, {ttl: 0});
       return result;
     } catch (err) {
       console.error(err)
@@ -48,12 +49,12 @@ export class AppService {
   async getContractData(
     address: string,
     fnname: string,
-    arg: string,
+    args: string[],
   ): Promise<object> {
     const abi = await this.getAbi(address);
     const contract = new Contract(address, abi, this.ethersProvider);
     try {
-      return { data: await contract[fnname](arg) };
+      return { data: await contract[fnname](...args) };
     } catch (err) {
       throw new BadRequestException(
         {

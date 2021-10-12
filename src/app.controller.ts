@@ -1,23 +1,27 @@
-import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
+import { CacheTTL, Controller, Get, Param, Req, Request } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/:contract/:fnname/:arg0')
+  @Get('/:contract/:fnname*')
+  @CacheTTL(25)
   async getContractCall(
     @Param('contract') contract: string,
     @Param('fnname') fnname: string,
-    @Param('arg0') arg0: string,
+    @Req() req: any,
   ): Promise<object> {
-    return this.appService.getContractData(contract, fnname, arg0);
+    let args = [];
+    if (req.params['0'] && req.params['0'].length > 1) {
+      args = req.params['0'].substr(1).split('/');
+    }
+
+    return this.appService.getContractData(contract, fnname, args);
   }
 
   @Get('/:contract')
-  async getAbiCall(
-    @Param('contract') contract: string
-  ): Promise<string> {
+  async getAbiCall(@Param('contract') contract: string): Promise<string> {
     return this.appService.getAbi(contract);
   }
 }
