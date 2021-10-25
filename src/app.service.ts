@@ -117,13 +117,29 @@ export class AppService {
     url: string,
   ): Promise<{ body: string; mime: string } | { error: boolean; url: string }> {
     try {
-      if (url.startsWith('http')) {
-        console.log('fetching', url.toString());
+      if (url.startsWith('http:')) {
         const fetched = await fetch(url);
         const mime = fetched.headers.get('content-type');
         const body = await fetched.text();
         return { body, mime };
       }
+      if (url.startsWith('data:')) {
+        const commaIndex = url.indexOf(',');
+        if (commaIndex === -1) {
+          throw new Error('invalid data uri');
+        }
+        const data = url.substr(commaIndex + 1);
+        const mimeData = url
+          .substr(0, commaIndex + 1)
+          .match(/^data:([a-zA-Z/]+)(;base64)?,$/);
+        return {
+          body: mimeData.length > 2 && mimeData[2] === ';base64'
+            ? Buffer.from(data, 'base64').toString('utf-8')
+            : data,
+          mime: mimeData[1],
+        };
+      }
+      console.log(url);
     } catch (err: any) {
       console.error(err);
       return { error: true, url };
