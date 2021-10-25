@@ -131,7 +131,7 @@ export class AppService {
         const data = url.substr(commaIndex + 1);
         const mimeData = url
           .substr(0, commaIndex + 1)
-          .match(/^data:([a-zA-Z/]+)(;base64)?,$/);
+          .match(/^data:([^;,]+)(;base64)?,$/);
         return {
           body: mimeData.length > 2 && mimeData[2] === ';base64'
             ? Buffer.from(data, 'base64').toString('utf-8')
