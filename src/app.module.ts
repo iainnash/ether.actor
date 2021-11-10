@@ -1,26 +1,23 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EthersModule } from 'nestjs-ethers';
-import * as redisStore from 'cache-manager-redis-store';
+import { AbiModule } from './abi/abi.module';
+import { EthereumModule } from './ethereum/ethereum.module';
+import { AbiService } from './abi/abi.service';
+import { EthereumService } from './ethereum/ethereum.service';
+import { CacheStoreModule } from './cachestore/cachestore.module';
+import { NftModule } from './nft/nft.module';
+import { InteractionModule } from './interaction/interaction.module';
 
 @Module({
   imports: [
-    EthersModule.forRoot({
-      cloudflare: true,
-      quorum: 1,
-      useDefaultProvider: false,
-      etherscan: process.env.ETHERSCAN_API_KEY,
-    }),
-    CacheModule.register({
-      store: redisStore,
-      host: process.env.REDISHOST,
-      port: process.env.REDISPORT,
-      user: process.env.REDISUSER,
-      password: process.env.REDISPASSWORD,
-    }),
+    EthereumModule,
+    AbiModule,
+    CacheStoreModule,
+    NftModule,
+    InteractionModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AbiService, EthereumService],
 })
 export class AppModule {}
