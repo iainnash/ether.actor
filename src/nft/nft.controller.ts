@@ -21,6 +21,7 @@ export class NftController {
     try {
       return await this.nftService.getNFTInfo(host, contract, id);
     } catch (e) {
+      console.error(e);
       throw new NotFoundException();
     }
   }
@@ -32,12 +33,14 @@ export class NftController {
     @Headers('Host') host: string,
   ): Promise<object> {
     try {
-      return (await this.nftService.getNFTInfo(host, contract, id) as any).metadata;
+      return ((await this.nftService.getNFTInfo(host, contract, id)) as any)
+        .metadata;
     } catch (e) {
+      console.error(e);
       throw new NotFoundException();
     }
   }
-  
+
   @Get('/:contract/:id/content')
   async getContent(
     @Param('contract') contract: string,
@@ -46,9 +49,14 @@ export class NftController {
     @Response() res: any,
   ): Promise<object> {
     try {
-      const nftInfo = await this.nftService.getNFTInfo(host, contract, id) as any;
+      const nftInfo = (await this.nftService.getNFTInfo(
+        host,
+        contract,
+        id,
+      )) as any;
       return res.redirect(nftInfo.contentURL);
     } catch (e) {
+      console.error(e);
       throw new NotFoundException();
     }
   }
@@ -61,9 +69,14 @@ export class NftController {
     @Response() res: any,
   ): Promise<object> {
     try {
-      const nftInfo = await this.nftService.getNFTInfo(host, contract, id) as any;
+      const nftInfo = (await this.nftService.getNFTInfo(
+        host,
+        contract,
+        id,
+      )) as any;
       return res.redirect(nftInfo.imageURL);
     } catch (e) {
+      console.error(e);
       throw new NotFoundException();
     }
   }
