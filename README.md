@@ -6,7 +6,7 @@
 <p>try it:</p>
 
 <ul>
-<li><a href="https://ether.actor/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63">/0xcontract</a><br />
+<li><a href="https://ether.actor/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63.json">/0xcontract.json</a><br />
 returns the ABI of the given contract</li>
 
 <li><a href="https://ether.actor/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63/tokenURI/23">/0xcontract/methodName/arg0</a><br />
