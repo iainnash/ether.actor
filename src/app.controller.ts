@@ -15,55 +15,6 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/:contract/:fnname*')
-  // @CacheTTL(60)
-  async getContractCall(
-    @Param('contract') contract: string,
-    @Param('fnname') fnname: string,
-    @Req() req: any,
-    @Res() res: any,
-  ): Promise<any> {
-    let args = [];
-    if (req.params['0'] && req.params['0'].length > 1) {
-      args = req.params['0'].substr(1).split('/');
-    }
-
-    const hasFetch = 'fetch' in req.query;
-
-    const result = await this.appService.getContractData(
-      contract,
-      fnname,
-      args,
-    );
-    if ('fetch' in req.query) {
-      try {
-        const fetchResult = await this.appService.fetchUrlContract(
-          result.toString(),
-        );
-        if ('error' in fetchResult) {
-          res.status(500).send(result);
-          return;
-        }
-        res.header('content-type', fetchResult.mime);
-        res.send(fetchResult.body);
-        return;
-        // return fetchResult.body;
-      } catch {}
-    }
-    res.send(result);
-  }
-
-  @Get('/:contract.json')
-  async getAbiCall(@Param('contract') contract: string): Promise<object> {
-    return await this.appService.getAbi(contract);
-  }
-
-  // @Get('/:contract')
-  // async getAbiHumanCall(@Param('contract') contract: string): Promise<string> {
-  //   const abiResult = await this.appService.getAbi(contract);
-
-  // }
-
   @Get('/')
   getHomepage(): string {
     return `

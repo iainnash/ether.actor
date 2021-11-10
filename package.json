@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@types/cache-manager": "^3.4.2",
     "@types/isomorphic-fetch": "^0.0.35",
+    "@zoralabs/nft-metadata": "^1.0.0",
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
     "erc-token-abis": "^1.0.0",
