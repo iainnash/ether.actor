@@ -32,10 +32,8 @@ export class NftService {
       return exists as any;
     }
 
-    const provider = this.ethereum.getProviderFromNetworkId(networkId);
     const nftAgent = new Agent({
-      network: networkId,
-      networkUrl: provider.connection.url,
+      provider: this.ethereum.getProviderFromNetworkId(networkId),
       timeout: 5000,
     });
     const result = await nftAgent.fetchMetadata(address, tokenId);

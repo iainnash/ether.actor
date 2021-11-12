@@ -1862,20 +1862,20 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zoralabs/core@^1.0.4":
+"@zoralabs/core@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@zoralabs/core/-/core-1.0.7.tgz#c426b5d85cf1cb0c57d7e9dc0a3fd8519c78566d"
   integrity sha512-BZ6/n/2YIOAXWU+VtxNo+O/1wy9mFb7Grfdg2EkJoaq/2UJjf7cpMZfdQHp2CRa+m3XYb1uVG3q6236i+Uz1MQ==
   dependencies:
     ethers "^5.0.19"
 
-"@zoralabs/nft-metadata@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.0.0.tgz#998eb0c4f2989b783d8fcf251cb436492fdb6a55"
-  integrity sha512-3TTAtzMG+c8auolp6ImlHcNwBgsnQgd0TsESJIgEnEorIYhIvd5BM+1vHpTPSbkLHhQx3ImfXEdg5krPHftFHg==
+"@zoralabs/nft-metadata@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.1.0.tgz#3bbec3609a7df208391bc242926783ffd6e637b5"
+  integrity sha512-CzyYDTNmbcdPyOULuzzitbJOMbVGc4XmwwzDVseGwB0q9yi0geomi5V/6cvpKAVgC2ljcEIuU+juvBQkJ+D0WA==
   dependencies:
     "@pinata/ipfs-gateway-tools" "^1.1.6"
-    "@zoralabs/core" "^1.0.4"
+    "@zoralabs/core" "^1.0.7"
     axios "^0.22.0"
     axios-retry "^3.2.3"
     cross-fetch "^3.1.4"
