@@ -153,7 +153,7 @@ export class AbiService {
 
     const sourceChunks = Object.keys(sources).map((sourcePart) => 
       `// ${sourcePart}\n`+
-      isHTML ? highlightCode(sources[sourcePart].content) : `${sources[sourcePart].content}`
+      (isHTML ? highlightCode(sources[sourcePart].content) : sources[sourcePart].content)
     ).join("\n");
     return [isHTML ? HTML_START : '', langChunk, sourceChunks, optimizer, isHTML ? HTML_END : ''].join("\n");
   }
