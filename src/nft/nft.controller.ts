@@ -1,12 +1,25 @@
 import {
   Controller,
   Get,
+  GoneException,
   Headers,
   NotFoundException,
   Param,
   Response,
 } from '@nestjs/common';
+import { uri } from '@zoralabs/nft-metadata';
 import { NftService } from './nft.service';
+
+function handleUrlResponse(url: string, res: any) {
+  if (!url) {
+    throw new GoneException();
+  }
+  if (url && url.startsWith('data:')) {
+    const parsedUri = uri.parseDataUri(url)
+    return res.header('content-type', parsedUri.mime).send(parsedUri.body);
+  }
+  return res.redirect(url);
+}
 
 @Controller('/nft')
 export class NftController {
@@ -46,15 +59,15 @@ export class NftController {
     @Param('contract') contract: string,
     @Param('id') id: string,
     @Headers('Host') host: string,
-    @Response() res: any,
-  ): Promise<object> {
+    @Response() res: Response,
+  ) {
     try {
       const nftInfo = (await this.nftService.getNFTInfo(
         host,
         contract,
         id,
       )) as any;
-      return res.redirect(nftInfo.contentURL);
+      handleUrlResponse(nftInfo.contentURL, res);
     } catch (e) {
       console.error(e);
       throw new NotFoundException();
@@ -67,14 +80,14 @@ export class NftController {
     @Param('id') id: string,
     @Headers('Host') host: string,
     @Response() res: any,
-  ): Promise<object> {
+  ) {
     try {
       const nftInfo = (await this.nftService.getNFTInfo(
         host,
         contract,
         id,
       )) as any;
-      return res.redirect(nftInfo.imageURL);
+      handleUrlResponse(nftInfo.imageURL, res);
     } catch (e) {
       console.error(e);
       throw new NotFoundException();
