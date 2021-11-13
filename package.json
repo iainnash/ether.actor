@@ -30,6 +30,8 @@
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
     "erc-token-abis": "^1.0.0",
+    "highlight.js": "^11.3.1",
+    "highlightjs-solidity": "git+https://github.com/iainnash/highlightjs-solidity",
     "isomorphic-fetch": "^3.0.0",
     "nestjs-ethers": "^1.0.0",
     "reflect-metadata": "^0.1.13",

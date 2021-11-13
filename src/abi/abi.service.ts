@@ -13,7 +13,11 @@ import {
   isAddress,
   Provider,
 } from 'nestjs-ethers';
+import hljs from 'highlight.js/lib/common';
+const {solidity} = require('highlightjs-solidity');
 import { EthereumService } from 'src/ethereum/ethereum.service';
+
+hljs.registerLanguage('solidity', solidity);
 
 const ERC20_ABI = require('erc-token-abis/abis/ERC20Base.json');
 const ERC721BASE_ABI = require('erc-token-abis/abis/ERC721Base.json');
@@ -23,23 +27,27 @@ const ERC1155Base_ABI = require('erc-token-abis/abis/ERC1155Base.json');
 const HTML_START = `
 <!DOCTYPE HTML>
 <head>
+<title>contract</title>
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
 <style>
+body {
   font-family: courier new;
   white-space: pre;
+}
 </style>
 </head>
 <body>
-<pre>
-<![CDATA[
-
 `
 
 const HTML_END = `
-]]>
-</pre>
 </body>
 </html>
 `;
+
+function highlightCode(code: string) {
+  return hljs.highlight(code, {language: 'solidity'}).value;
+}
 
 const getHumanAbi = (abi: string) =>
   new Interface(abi).format(FormatTypes.full);
@@ -133,7 +141,7 @@ export class AbiService {
     }
   }
 
-  async getSource(host: string, address: string, isHTML: boolean = true): Promise<string> {
+  async getSource(host: string, address: string, isHTML: boolean = false): Promise<string> {
     const abiResult = await this.getAbiFromHost(address, host);
     if (abiResult['guessFromInterface']) {
       throw new NotFoundException();
@@ -145,7 +153,7 @@ export class AbiService {
 
     const sourceChunks = Object.keys(sources).map((sourcePart) => 
       `// ${sourcePart}\n`+
-      `${sources[sourcePart].content}`
+      isHTML ? highlightCode(sources[sourcePart].content) : `${sources[sourcePart].content}`
     ).join("\n");
     return [isHTML ? HTML_START : '', langChunk, sourceChunks, optimizer, isHTML ? HTML_END : ''].join("\n");
   }

@@ -13,6 +13,15 @@ export class AbiController {
     return await this.abiService.getAbiFromHost(contract, host);
   }
 
+  @Get('/:contract.html')
+  @Header("Content-Type", "text/html")
+  async getContractSourceHTML(
+    @Param('contract') contract: string,
+    @Headers('Host') host: string,
+  ): Promise<string> {
+    return await this.abiService.getSource(host, contract, true);
+  }
+
   @Get('/:contract')
   @Header("Content-Type", "text/plain")
   async getContractSource(
@@ -21,4 +30,6 @@ export class AbiController {
   ): Promise<string> {
     return await this.abiService.getSource(host, contract, false);
   }
+
+
 }
