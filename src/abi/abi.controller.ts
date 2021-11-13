@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Headers, Param, Req } from '@nestjs/common';
+import { Controller, Get, Header, Headers, Param, Req, Res } from '@nestjs/common';
 import { AbiService } from './abi.service';
 
 @Controller()
@@ -11,5 +11,14 @@ export class AbiController {
     @Headers('Host') host: string,
   ): Promise<object> {
     return await this.abiService.getAbiFromHost(contract, host);
+  }
+
+  @Get('/:contract')
+  @Header("Content-Type", "text/plain")
+  async getContractSource(
+    @Param('contract') contract: string,
+    @Headers('Host') host: string,
+  ): Promise<string> {
+    return await this.abiService.getSource(host, contract, false);
   }
 }

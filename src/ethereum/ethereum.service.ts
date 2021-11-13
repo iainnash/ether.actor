@@ -9,11 +9,6 @@ import {
   StaticJsonRpcProvider,
 } from 'nestjs-ethers';
 
-const ERC20_ABI = require('erc-token-abis/abis/ERC20Base.json');
-const ERC721BASE_ABI = require('erc-token-abis/abis/ERC721Base.json');
-const ERC721FULL_ABI = require('erc-token-abis/abis/ERC721Full.json');
-const ERC1155Base_ABI = require('erc-token-abis/abis/ERC1155Base.json');
-
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
   if (this.network.chainId === MUMBAI_NETWORK.chainId) {
@@ -28,7 +23,7 @@ EtherscanProvider.prototype.getBaseUrl = function () {
   if (this.network.chainId === RINKEBY_NETWORK.chainId) {
     return 'https://api-rinkeby.etherscan.io/';
   }
-  throw new Error('no more chains');
+  throw new Error('undefined chain');
 };
 
 @Injectable()
@@ -81,6 +76,22 @@ export class EthereumService {
     ];
     const etherscanProvider = new EtherscanProvider(networkId, apiKey);
     return etherscanProvider;
+  }
+
+  async getContractInfoEtherscan(
+    etherscanProvider: EtherscanProvider,
+    address: string,
+  ) {
+    const sourceResult = await etherscanProvider.fetch('contract', {
+      action: 'getsourcecode',
+      address,
+    });
+    console.log(Object.keys(sourceResult[0]));
+    const { ABI, SourceCode, ...info } = sourceResult[0];
+    const abi = JSON.parse(ABI);
+    // Don't ask me why...
+    const source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
+    return { abi, source, info };
   }
 
   getRpcService(networkId: number) {
