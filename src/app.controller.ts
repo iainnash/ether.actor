@@ -22,6 +22,21 @@ export class AppController {
 <html>
 <head>
 <title>ether.actor</title>
+<meta name="description" content="Super simple Ethereum to HTTP bridge for fetching contract information. Powered by Etherscan for ABIs and Cloudflare for Ethereum endpoints.">
+
+<!-- OpenGraph Meta Tags -->
+<meta property="og:url" content="https://ether.actor/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ether.actor">
+<meta property="og:description" content="Super simple Ethereum to HTTP bridge for fetching contract information. Powered by Etherscan for ABIs and Cloudflare for Ethereum endpoints.">
+
+<!-- Twitter Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta property="twitter:domain" content="ether.actor">
+<meta property="twitter:url" content="https://ether.actor/">
+<meta name="twitter:title" content="ether.actor">
+<meta name="twitter:description" content="Super simple Ethereum to HTTP bridge for fetching contract information. Powered by Etherscan for ABIs and Cloudflare for Ethereum endpoints.">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
 <style>
 body {
