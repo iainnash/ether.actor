@@ -88,9 +88,13 @@ export class EthereumService {
     });
     console.log(Object.keys(sourceResult[0]));
     const { ABI, SourceCode, ...info } = sourceResult[0];
+    console.log({result: sourceResult[0]})
     const abi = JSON.parse(ABI);
     // Don't ask me why...
-    const source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
+    let source = SourceCode;
+    if (SourceCode[0] == '[') {
+      source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
+    }
     return { abi, source, info };
   }
 
