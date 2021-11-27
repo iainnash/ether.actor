@@ -86,11 +86,13 @@ export class EthereumService {
       action: 'getsourcecode',
       address,
     });
-    console.log(Object.keys(sourceResult[0]));
     const { ABI, SourceCode, ...info } = sourceResult[0];
     const abi = JSON.parse(ABI);
     // Don't ask me why...
-    const source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
+    let source = SourceCode;
+    if (SourceCode[0] == '[') {
+      source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
+    }
     return { abi, source, info };
   }
 
