@@ -60,6 +60,10 @@ returns the ABI of the given contract (in human-readable and raw abi format)</li
 
 <li><sup>new</sup> the abi returned for un-verified contracts is a best-guess given the ERC165 spec and common conventions. working to improve these matches soon. you can read from unverified ERC20 and ERC721 tokens</li>
 
+<li><sup>new</sup> <a href="/nft/0x5A876ffc6E75066f5ca870e20FCa4754C1EfE91F/309.json">/nft/0x5A876ffc6E75066f5ca870e20FCa4754C1EfE91F/309.json</a> /nft/{contract}/{id}.json – query nft data using <code>github.com/ourzora/nft-metadata</code> in json format</li>
+<li><sup>new</sup> <a href="/nft/0x5A876ffc6E75066f5ca870e20FCa4754C1EfE91F/309/content">/nft/0x5A876ffc6E75066f5ca870e20FCa4754C1EfE91F/309/content</a> show content of nft /nft/{contract}/{id}/content</li>
+<li><sup>new</sup> <a href="/nft/0x5A876ffc6E75066f5ca870e20FCa4754C1EfE91F/309/image">/nft/0x5A876ffc6E75066f5ca870e20FCa4754C1EfE91F/309/image</a> show image of nft /nft/{contract}/{id}/image</li>
+
 <li><a href="/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63/tokenURI/23">/0xcontract/methodName/arg0</a><br />
 returns the result of the given function call</li>
 
