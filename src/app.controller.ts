@@ -1,22 +1,19 @@
 import {
-  CacheInterceptor,
-  CacheTTL,
   Controller,
   Get,
-  Param,
-  Req,
-  Res,
-  UseInterceptors,
+  Headers,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
-// @UseInterceptors(CacheInterceptor)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/')
-  getHomepage(): string {
+  getHomepage(
+    @Headers('Host') host: string,
+  ): string {
+    const [hostFirst] = host.split('.');
     return `
 <!DOCTYPE HTML>
 <html>
@@ -51,9 +48,10 @@ li {
 </style>
 </head>
 <body>
-<h2>super simple ethereum -> http bridge for fetching contract info</h2>
+<h2>simple ${hostFirst} -> http bridge for fetching contract info</h2>
 <a class="github-fork-ribbon" href="https://github.com/iainnash/ether.actor" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 <p>powered by etherscan for ABIs and cloudflare for ethereum endpoints<p>
+<p>now querying ${hostFirst}. supports: <a href="https://ether.actor/">ethereum</a>, <a href="https://rinkeby.ether.actor">rinkeby</a>, <a href="https://polygon.ether.actor">polygon</a>, <a href="https://mumbai.ether.actor">mumbai</a></p>
 <br />
 <p>try it:</p>
 <ul>
