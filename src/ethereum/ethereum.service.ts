@@ -86,9 +86,7 @@ export class EthereumService {
       action: 'getsourcecode',
       address,
     });
-    console.log(Object.keys(sourceResult[0]));
     const { ABI, SourceCode, ...info } = sourceResult[0];
-    console.log({result: sourceResult[0]})
     const abi = JSON.parse(ABI);
     // Don't ask me why...
     let source = SourceCode;
