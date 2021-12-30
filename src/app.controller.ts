@@ -55,7 +55,7 @@ li {
 <br />
 <p>try it:</p>
 <ul>
-<li><a href="/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63.json">/0xcontract</a><br />
+<li><a href="/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63.json">/0xcontract.json</a><br />
 returns the ABI of the given contract (in human-readable and raw abi format)</li>
 
 <li><sup>new</sup> the abi returned for un-verified contracts is a best-guess given the ERC165 spec and common conventions. working to improve these matches soon. you can read from unverified ERC20 and ERC721 tokens</li>
