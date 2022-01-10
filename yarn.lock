@@ -1869,10 +1869,10 @@
   dependencies:
     ethers "^5.0.19"
 
-"@zoralabs/nft-metadata@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.1.1.tgz#4e9f79f07d1cfbf396d29d6cfdf541e6b52e9046"
-  integrity sha512-3qNBVR1rMMSS6j/q/45d6XzbIg/uLdUCDjiy3kXUGAP3GNNiopw3CEUcQ4musIMBb3F6dU1BJlvz+hCrHDsbYg==
+"@zoralabs/nft-metadata@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.2.1.tgz#1e9410549e3fd6b49571e79c87f5c6ab05aab22f"
+  integrity sha512-shbR7bjk9uKXF168fFG18jPQftvdZvR7M47Vwd9hsvHSMr66QngZZez+/HFIY9lUuhTtOGI7iy7rvr0IrP5tkg==
   dependencies:
     "@pinata/ipfs-gateway-tools" "^1.1.6"
     "@zoralabs/core" "^1.0.7"
