@@ -1,5 +1,5 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { Agent } from '@zoralabs/nft-metadata';
+import { Agent, addresses } from '@zoralabs/nft-metadata';
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
 
@@ -9,6 +9,10 @@ export class NftService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @Inject(EthereumService) private ethereum: EthereumService,
   ) {}
+
+  async getSupportedContracts(): Promise<object> {
+    return addresses;
+  }
 
   async getNFTInfo(
     host: string,

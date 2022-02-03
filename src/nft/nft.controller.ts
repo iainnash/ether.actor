@@ -39,6 +39,11 @@ export class NftController {
     }
   }
 
+  @Get("/contracts")
+  async getContracts(): Promise<object> {
+    return await this.nftService.getSupportedContracts();
+  }
+
   @Get('/:contract/:id/metadata.json')
   async getMetadata(
     @Param('contract') contract: string,
