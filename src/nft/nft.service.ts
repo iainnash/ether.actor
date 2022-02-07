@@ -4,9 +4,6 @@ import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
 import { Contract, JsonRpcBatchProvider } from 'nestjs-ethers';
 
-const networkIdToNFTMetadataNetwork = {
-  1: 'ETH',
-};
 @Injectable()
 export class NftService {
   constructor(
@@ -52,11 +49,17 @@ export class NftService {
       batchProvider,
     );
 
-    const nftInfo = await Promise.all([
-      nftMethods.ownerOf(tokenId),
-      nftMethods.name(),
-      nftMethods.symbol(),
-    ]);
+    let ownerOf = null;
+    let name = null;
+    let symbol = null;
+
+    try {
+      [ownerOf, name, symbol] = await Promise.all([
+        nftMethods.functions.ownerOf(tokenId),
+        nftMethods.functions.name(),
+        nftMethods.functions.symbol(),
+      ]);
+    } catch (e) {}
 
     try {
       // @ts-ignore
@@ -79,11 +82,11 @@ export class NftService {
     const agentResult = await nftAgent.fetchMetadata(address, tokenId);
     const result = {
       ...agentResult,
-      owner: nftInfo[0],
+      owner: ownerOf,
       contract: {
         address,
-        name: nftInfo[1],
-        symbol: nftInfo[2],
+        name,
+        symbol,
       },
     };
 
