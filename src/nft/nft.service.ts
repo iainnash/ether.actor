@@ -14,13 +14,18 @@ export class NftService {
     @Inject(EthereumService) private ethereum: EthereumService,
   ) {}
 
-  async getSupportedContracts(host: string): Promise<object> {
-    const networkId = this.ethereum.getNetworkId(host);
-    const provider = this.ethereum.getProviderFromNetworkId(networkId);
-    const networkName = provider.network.name;
-    return Object.keys(addresses)
-      .map((addressKey) => addresses[addressKey][networkName])
-      .filter((addressResult) => !!addressResult);
+  async getSupportedContracts(): Promise<object> {
+    // ethers provider network name to network id
+    const networks = {};
+    Object.values(addresses).forEach((addressesByNetwork) => {
+      Object.keys(addressesByNetwork).forEach((network) => {
+        if (!networks[network]) {
+          networks[network] = [];
+        }
+        networks[network].push(addressesByNetwork[network]);
+      });
+    });
+    return networks;
   }
 
   async getNFTInfo(
