@@ -1,10 +1,10 @@
 {
-  "name": "etheractor",
-  "version": "0.0.1",
+  "name": "ether.actor",
+  "version": "0.0.2",
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "GPL-v3",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

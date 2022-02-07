@@ -15,7 +15,7 @@ function handleUrlResponse(url: string, res: any) {
     throw new GoneException();
   }
   if (url && url.startsWith('data:')) {
-    const parsedUri = uri.parseDataUri(url)
+    const parsedUri = uri.parseDataUri(url);
     return res.header('content-type', parsedUri.mime).send(parsedUri.body);
   }
   return res.redirect(url);
@@ -39,9 +39,9 @@ export class NftController {
     }
   }
 
-  @Get("/contracts")
-  async getContracts(): Promise<object> {
-    return await this.nftService.getSupportedContracts();
+  @Get('/contracts')
+  async getContracts(@Headers('Host') host: string): Promise<object> {
+    return await this.nftService.getSupportedContracts(host);
   }
 
   @Get('/:contract/:id/metadata.json')

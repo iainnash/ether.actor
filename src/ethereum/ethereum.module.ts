@@ -17,7 +17,7 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
     EthersModule.forRoot({
       token: 'ether',
       network: MAINNET_NETWORK.chainId,
-      cloudflare: true,
+      custom: NETWORK_CONFIGS.mainnet,
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({
