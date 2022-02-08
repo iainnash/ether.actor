@@ -1398,7 +1398,7 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
-"@pinata/ipfs-gateway-tools@^1.1.6":
+"@pinata/ipfs-gateway-tools@1.1.6":
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/@pinata/ipfs-gateway-tools/-/ipfs-gateway-tools-1.1.6.tgz#1378db5e3dd879cd615fd88c952624f4c93e9e18"
   integrity sha512-0KXTUkt8rxJWUXzTMS46OoeVDiDe15S7enZQV+TLU6/knrxg40H8aGl4D1IVg8vPt5ISBd9uePziIjN/UDlXaQ==
@@ -1869,12 +1869,12 @@
   dependencies:
     ethers "^5.0.19"
 
-"@zoralabs/nft-metadata@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.2.1.tgz#1e9410549e3fd6b49571e79c87f5c6ab05aab22f"
-  integrity sha512-shbR7bjk9uKXF168fFG18jPQftvdZvR7M47Vwd9hsvHSMr66QngZZez+/HFIY9lUuhTtOGI7iy7rvr0IrP5tkg==
+"@zoralabs/nft-metadata@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.2.3.tgz#cf46e2addd7fc369544ff7e13b9739d341db6bcf"
+  integrity sha512-VOzWKETCWryG1fXyyVBazGo5X88spLCp+Dm7Ew9Gd0nznaARd37CndsmxScWECyOSVLb40BjNImcpRFKN016OQ==
   dependencies:
-    "@pinata/ipfs-gateway-tools" "^1.1.6"
+    "@pinata/ipfs-gateway-tools" "1.1.6"
     "@zoralabs/core" "^1.0.7"
     axios "^0.22.0"
     axios-retry "^3.2.3"
