@@ -49,17 +49,15 @@ export class NftService {
       batchProvider,
     );
 
-    let ownerOf = null;
-    let name = null;
-    let symbol = null;
+    const data = await Promise.all([
+      nftMethods.functions.ownerOf(tokenId),
+      nftMethods.functions.name(),
+      nftMethods.functions.symbol(),
+    ]);
 
-    try {
-      [ownerOf, name, symbol] = await Promise.all([
-        nftMethods.functions.ownerOf(tokenId),
-        nftMethods.functions.name(),
-        nftMethods.functions.symbol(),
-      ]);
-    } catch (e) {}
+    const ownerOf = data[0][0];
+    const name = data[1][0];
+    const symbol = data[2][0];
 
     try {
       // @ts-ignore
