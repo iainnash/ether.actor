@@ -25,7 +25,7 @@ USER node
 WORKDIR /home/node
 
 COPY package*.json ./
-COPY yarn*.json ./
+COPY yarn.lock ./
 RUN yarn
 
 COPY --chown=node:node . .
