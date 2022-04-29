@@ -19,3 +19,5 @@ returns the result of the given function call (works for media too)</li>
 <br />works with booleans and multiple arguments.
 </ul>
 
+hosting for ether.actor sponsored by <a href="https://syndicate.io/">syndicatedao</a>
+

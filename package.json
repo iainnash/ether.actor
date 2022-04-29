@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "GPL-v3",
+  "engines": {
+    "node": ">= 12.0.0"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -26,7 +29,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@types/cache-manager": "^3.4.2",
     "@types/isomorphic-fetch": "^0.0.35",
-    "@zoralabs/nft-metadata": "^1.2.3",
+    "@zoralabs/nft-metadata": "^1.2.5",
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
     "erc-token-abis": "^1.0.0",

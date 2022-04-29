@@ -77,6 +77,7 @@ returns the result of the given function call (works for media too)</li>
 <div style="margin-top: 20vh">
   <a href="https://twitter.com/isiain">a project by iain</a>
   <br />
+  <a href="https://syndicate.io/">hosting sponsored by syndicate dao</a>
   <br />
   <a href="https://github.com/iainnash/ether.actor">source code</a>
 </div>
