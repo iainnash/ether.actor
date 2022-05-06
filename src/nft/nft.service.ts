@@ -59,18 +59,21 @@ export class NftService {
     const name = data[1][0];
     const symbol = data[2][0];
 
-    try {
-      // @ts-ignore
-      const redisStore = this.cacheManager.store.getClient();
-      await redisStore.incr('hits:nft');
-      await redisStore.incr(`hits:${cacheKey}`);
-    } catch (e) {
-      console.error(e);
-    }
+    // @ts-ignore
+    if (this.cacheManager.store.getClient) {
+      try {
+        // @ts-ignore
+        const redisStore = this.cacheManager.store.getClient();
+        await redisStore.incr('hits:nft');
+        await redisStore.incr(`hits:${cacheKey}`);
+      } catch (e) {
+        console.error(e);
+      }
 
-    const exists = await this.cacheManager.get(cacheKey);
-    if (exists) {
-      return exists as any;
+      const exists = await this.cacheManager.get(cacheKey);
+      if (exists) {
+        return exists as any;
+      }
     }
 
     const nftAgent = new Agent({

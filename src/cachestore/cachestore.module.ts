@@ -5,9 +5,9 @@ import * as redisStore from 'cache-manager-redis-store';
   exports: [CacheModule],
   imports: [
     CacheModule.register({
-      store: redisStore,
+      store: process.env.REDIS_URL ? redisStore : undefined,
       url: process.env.REDIS_URL,
-    }), 
+    }),
   ],
 })
 export class CacheStoreModule {}
