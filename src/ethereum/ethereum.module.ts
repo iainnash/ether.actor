@@ -47,7 +47,7 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({
-      token: 'bsctestnet',
+      token: 'bsc-testnet',
       network: MATIC_NETWORK.chainId,
       custom:
         NETWORK_CONFIGS.bsc_testnet ||
