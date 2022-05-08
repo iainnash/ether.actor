@@ -6,6 +6,8 @@ import {
   MATIC_NETWORK,
   MUMBAI_NETWORK,
   RINKEBY_NETWORK,
+  BINANCE_TESTNET_NETWORK,
+  BINANCE_NETWORK,
   ROPSTEN_NETWORK,
 } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
@@ -39,6 +41,18 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       network: MATIC_NETWORK.chainId,
       custom: NETWORK_CONFIGS.polygon,
       useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'bsc',
+      network: BINANCE_NETWORK.chainId,
+      custom: NETWORK_CONFIGS.bsc || 'https://bscrpc.com',
+      useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'bsc-testnet',
+      custom:
+        NETWORK_CONFIGS.bsc_testnet ||
+        'https://data-seed-prebsc-1-s1.binance.org:8545',
     }),
     EthersModule.forRoot({
       token: 'goerli',

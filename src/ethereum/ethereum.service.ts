@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
+  BINANCE_NETWORK,
+  BINANCE_TESTNET_NETWORK,
   EtherscanProvider,
   InjectEthersProvider,
   MAINNET_NETWORK,
@@ -53,6 +55,10 @@ export class EthereumService {
         return MUMBAI_NETWORK.chainId;
       case 'polygon':
         return MATIC_NETWORK.chainId;
+      case 'bsc':
+        return BINANCE_NETWORK.chainId;
+      case 'bsc-testnet':
+        return BINANCE_TESTNET_NETWORK.chainId;
     }
     throw new NotFoundException();
   }
