@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import {
   EthersModule,
+  GOERLI_NETWORK,
   MAINNET_NETWORK,
   MATIC_NETWORK,
   MUMBAI_NETWORK,
   RINKEBY_NETWORK,
+  ROPSTEN_NETWORK,
 } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
 
@@ -37,6 +39,32 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       network: MATIC_NETWORK.chainId,
       custom: NETWORK_CONFIGS.polygon,
       useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'goerli',
+      network: GOERLI_NETWORK,
+      custom: NETWORK_CONFIGS.goerli || 'https://goerli.prylabs.net',
+    }),
+    EthersModule.forRoot({
+      token: 'ropsten',
+      network: ROPSTEN_NETWORK,
+      custom: NETWORK_CONFIGS.ropsten,
+    }),
+    EthersModule.forRoot({
+      token: 'kovan-optimims',
+      network: {
+        chainId: 69,
+        name: 'kovan-optimims',
+      },
+      custom: NETWORK_CONFIGS.kovan_optimism || 'https://kovan.optimism.io',
+    }),
+    EthersModule.forRoot({
+      token: 'optimism',
+      network: {
+        chainId: 10,
+        name: 'optimism',
+      },
+      custom: NETWORK_CONFIGS.optimism || 'https://mainnet.optimism.io',
     }),
   ],
 })
