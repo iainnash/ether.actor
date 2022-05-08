@@ -44,6 +44,7 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       token: 'goerli',
       network: GOERLI_NETWORK,
       custom: NETWORK_CONFIGS.goerli || 'https://goerli.prylabs.net',
+      useDefaultProvider: false,
     }),
     EthersModule.forRoot({
       token: 'ropsten',
@@ -51,12 +52,13 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       custom: NETWORK_CONFIGS.ropsten,
     }),
     EthersModule.forRoot({
-      token: 'kovan-optimims',
+      token: 'kovan-optimism',
       network: {
         chainId: 69,
-        name: 'kovan-optimims',
+        name: 'kovan-optimism',
       },
       custom: NETWORK_CONFIGS.kovan_optimism || 'https://kovan.optimism.io',
+      useDefaultProvider: false,
     }),
     EthersModule.forRoot({
       token: 'optimism',
@@ -65,6 +67,7 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
         name: 'optimism',
       },
       custom: NETWORK_CONFIGS.optimism || 'https://mainnet.optimism.io',
+      useDefaultProvider: false,
     }),
   ],
 })
