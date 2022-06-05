@@ -14,7 +14,7 @@ import {
   Provider,
 } from 'nestjs-ethers';
 import hljs from 'highlight.js/lib/common';
-const {solidity} = require('highlightjs-solidity');
+const { solidity } = require('highlightjs-solidity');
 import { EthereumService } from 'src/ethereum/ethereum.service';
 
 hljs.registerLanguage('solidity', solidity);
@@ -38,7 +38,7 @@ body {
 </style>
 </head>
 <body>
-`
+`;
 
 const HTML_END = `
 </body>
@@ -46,7 +46,7 @@ const HTML_END = `
 `;
 
 function highlightCode(code: string) {
-  return hljs.highlight(code, {language: 'solidity'}).value;
+  return hljs.highlight(code, { language: 'solidity' }).value;
 }
 
 const getHumanAbi = (abi: string) =>
@@ -103,11 +103,12 @@ export class AbiService {
       throw new NotFoundException('Not an valid address');
     }
     const cacheKey = `${networkId}:source:${address.toLowerCase()}`;
-    const abi = await this.cacheManager.get<object>(cacheKey);
-    const ethereumProvider = this.ethereum.getRpcService(networkId);
+    // const abi = await this.cacheManager.get<object>(cacheKey);
+    let abi;
     if (abi) {
       return abi;
     }
+    const ethereumProvider = this.ethereum.getRpcService(networkId);
     try {
       const code = await ethereumProvider.getCode(address);
       if (!code) {
@@ -115,14 +116,43 @@ export class AbiService {
       }
 
       const etherscanProvider = this.ethereum.getEtherscanProvider(networkId);
-      const contractResult = await this.ethereum.getContractInfoEtherscan(etherscanProvider, address);
+      const { abi: contractAbi, ...contractResult } =
+        await this.ethereum.getContractInfoEtherscan(
+          etherscanProvider,
+          address,
+        );
+      let proxyResult;
+      const impl = contractResult.info.Implementation;
+      if (impl) {
+        proxyResult = await this.ethereum.getContractInfoEtherscan(
+          etherscanProvider,
+          impl,
+        );
+      }
+      let abi = contractAbi;
+      if (proxyResult) {
+        abi = [...abi, ...proxyResult.abi];
+      }
+
+      // let constructorArgsPretty;
+      // try {
+      //   constructorArgsPretty = new Interface(abi).decodeFunctionData(
+      //     '0x00000000',
+      //     contractResult.info.ConstructorArguments,
+      //   );
+      // } catch (e) {}
+
       const result = {
+        // constructorArgsPretty,
+        info: contractResult.info,
         guessFromInterface: false,
-        iface: getHumanAbi(contractResult.abi),
-        ...contractResult,
+        iface: [
+          ...getHumanAbi(contractAbi),
+          ...(proxyResult ? getHumanAbi(proxyResult.abi) : []),
+        ],
+        abi,
       };
-      // doesn't ever expire
-      await this.cacheManager.set(cacheKey, result, { ttl: 0 });
+      await this.cacheManager.set(cacheKey, result, { ttl: impl ? 100 : 0 });
       return result;
     } catch (err) {
       console.error(err);
@@ -141,20 +171,35 @@ export class AbiService {
     }
   }
 
-  async getSource(host: string, address: string, isHTML: boolean = false): Promise<string> {
+  async getSource(
+    host: string,
+    address: string,
+    isHTML: boolean = false,
+  ): Promise<string> {
     const abiResult = await this.getAbiFromHost(address, host);
     if (abiResult['guessFromInterface']) {
       throw new NotFoundException();
     }
     // @ts-ignore
-    const {language, settings, sources} = abiResult.source;
-    const langChunk = `// Lang: ${language}`
-    const optimizer = `// Settings: ${JSON.stringify(settings)}`
+    const { language, settings, sources } = abiResult.source;
+    const langChunk = `// Lang: ${language}`;
+    const optimizer = `// Settings: ${JSON.stringify(settings)}`;
 
-    const sourceChunks = Object.keys(sources).map((sourcePart) => 
-      `// ${sourcePart}\n`+
-      (isHTML ? highlightCode(sources[sourcePart].content) : sources[sourcePart].content)
-    ).join("\n");
-    return [isHTML ? HTML_START : '', langChunk, sourceChunks, optimizer, isHTML ? HTML_END : ''].join("\n");
+    const sourceChunks = Object.keys(sources)
+      .map(
+        (sourcePart) =>
+          `// ${sourcePart}\n` +
+          (isHTML
+            ? highlightCode(sources[sourcePart].content)
+            : sources[sourcePart].content),
+      )
+      .join('\n');
+    return [
+      isHTML ? HTML_START : '',
+      langChunk,
+      sourceChunks,
+      optimizer,
+      isHTML ? HTML_END : '',
+    ].join('\n');
   }
 }
