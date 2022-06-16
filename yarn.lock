@@ -1857,10 +1857,10 @@
   dependencies:
     ethers "^5.0.19"
 
-"@zoralabs/nft-metadata@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.2.5.tgz#dbf1f6fde6ef6bfb47acbc110b1ec368d2d1636e"
-  integrity sha512-FGZLLijY5aM/jUOxB3nlWMkdph9fayGtINH/viTPTKRNjTRNGvBF6ZAdViEn73rcN9cq0zmljPU+vx0h+Y8bVA==
+"@zoralabs/nft-metadata@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@zoralabs/nft-metadata/-/nft-metadata-1.2.6.tgz#a68ecf787b18e2d6bc6167392da8d0f1c00d77d1"
+  integrity sha512-ZlAyAqUJmbHbujesuIKM4PTB9z15izKresanFTcZ/1u6/7RQs2Hgs/ZZjrXYvDImvZjTX8NXy3nh7wttDwd/VA==
   dependencies:
     "@zoralabs/core" "^1.0.7"
     axios "^0.22.0"
