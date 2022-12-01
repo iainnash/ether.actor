@@ -5,7 +5,7 @@ import { AbiService } from './abi.service';
 export class AbiController {
   constructor(private readonly abiService: AbiService) {}
 
-  @Get('/:contract.json')
+  @Get('/0x:contract.json')
   async getAbiCall(
     @Param('contract') contract: string,
     @Headers('Host') host: string,
@@ -13,7 +13,16 @@ export class AbiController {
     return await this.abiService.getAbiFromHost(contract, host);
   }
 
-  @Get('/:contract.html')
+  @Get('/0x:contract/abi.json')
+  async getRawAbiCall(
+    @Param('contract') contract: string,
+    @Headers('Host') host: string,
+  ): Promise<object> {
+    const resp = await this.abiService.getAbiFromHost(contract, host)
+    return resp['abi'];
+  }
+
+  @Get('/0x:contract.html')
   @Header("Content-Type", "text/html")
   async getContractSourceHTML(
     @Param('contract') contract: string,
@@ -22,7 +31,7 @@ export class AbiController {
     return await this.abiService.getSource(host, contract, true);
   }
 
-  @Get('/:contract')
+  @Get('/0x:contract')
   @Header("Content-Type", "text/plain")
   async getContractSource(
     @Param('contract') contract: string,

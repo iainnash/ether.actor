@@ -9,6 +9,7 @@ import {
   AddressZero,
   Contract,
   FormatTypes,
+  getAddress,
   Interface,
   isAddress,
   Provider,
@@ -102,6 +103,7 @@ export class AbiService {
     if (!isAddress(address)) {
       throw new NotFoundException('Not an valid address');
     }
+    address = getAddress(address);
     const cacheKey = `${networkId}:source:${address.toLowerCase()}`;
     // const abi = await this.cacheManager.get<object>(cacheKey);
     let abi;
