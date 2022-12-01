@@ -1,11 +1,11 @@
-import { Controller, Get, Header, Headers, Param, Req, Res } from '@nestjs/common';
+import { Controller, Get, Header, Headers, Param } from '@nestjs/common';
 import { AbiService } from './abi.service';
 
 @Controller()
 export class AbiController {
   constructor(private readonly abiService: AbiService) {}
 
-  @Get('/0x:contract.json')
+  @Get('/:contract.json')
   async getAbiCall(
     @Param('contract') contract: string,
     @Headers('Host') host: string,
@@ -13,7 +13,7 @@ export class AbiController {
     return await this.abiService.getAbiFromHost(contract, host);
   }
 
-  @Get('/0x:contract/abi.json')
+  @Get('/:contract/abi.json')
   async getRawAbiCall(
     @Param('contract') contract: string,
     @Headers('Host') host: string,
@@ -22,7 +22,7 @@ export class AbiController {
     return resp['abi'];
   }
 
-  @Get('/0x:contract.html')
+  @Get('/:contract.html')
   @Header("Content-Type", "text/html")
   async getContractSourceHTML(
     @Param('contract') contract: string,
@@ -39,6 +39,4 @@ export class AbiController {
   ): Promise<string> {
     return await this.abiService.getSource(host, contract, false);
   }
-
-
 }
