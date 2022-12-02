@@ -16,7 +16,20 @@ export class DecodeService {
     contract: string,
     bytecodeString: string,
   ) {
-    const abi = await this.abiService.getAbiFromHost(contract, host);
+    let abi;
+    try {
+      abi = await this.abiService.getAbiFromHost(contract, host);
+    } catch (e) {
+
+    }
+    if (!abi) {
+      const result = await this.ethsig.getSignatureForTxn(bytecodeString);
+      return {
+        ...result,
+        isVerified: false,
+      }
+    }
+
     const result = new Interface(abi['abi']).parseTransaction({
       data: bytecodeString,
     });
@@ -38,6 +51,7 @@ export class DecodeService {
       name: result.signature,
       decoded: args,
       functionName: result.functionFragment.name,
+      isVerified: true,
     };
   }
 
