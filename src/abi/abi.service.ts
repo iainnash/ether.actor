@@ -100,7 +100,6 @@ export class AbiService {
   }
 
   async getAbi(address: string, networkId: number): Promise<object> {
-    console.log({address})
     if (!isAddress(address)) {
       throw new NotFoundException('Not an valid address');
     }
