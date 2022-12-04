@@ -5,7 +5,7 @@ import { InteractionService } from './interaction.service';
 export class InteractionController {
   constructor(private readonly interactionService: InteractionService) {}
 
-  @Get('/:contract/:fnname*')
+  @Get('/0x:contract/:fnname*')
   async getContractCall(
     @Param('contract') contract: string,
     @Param('fnname') fnname: string,
