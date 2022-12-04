@@ -20,7 +20,6 @@ export class EthsigService {
   async getSignatureForTxn(txn: string) {
     const signature = utils.hexDataSlice(txn, 0, 4);
     const cacheKey = `sig:${signature}`;
-    console.log({ signature });
     // let signatureData: any = await this.cacheManager.get(cacheKey);
     let signatureData: any = undefined;
     if (!signatureData) {
@@ -38,7 +37,6 @@ export class EthsigService {
     }
 
     const result = signatureData.result.function[signature];
-    console.log({ result });
 
     let decoded;
     for (const {name} of result) {
