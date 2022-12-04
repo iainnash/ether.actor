@@ -2,7 +2,15 @@ import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Agent, addresses } from '@zoralabs/nft-metadata';
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
-import { Contract, JsonRpcBatchProvider } from 'nestjs-ethers';
+import { Contract } from 'nestjs-ethers';
+
+async function orDefault<T>(asyncCall: any, fallback: T) {
+  try {
+    return await asyncCall
+  } catch {
+    return fallback;
+  }
+}
 
 @Injectable()
 export class NftService {
@@ -34,30 +42,27 @@ export class NftService {
     const provider = this.ethereum.getProviderFromNetworkId(networkId);
     const cacheKey = `nft:${networkId}:${address.toLowerCase()}:${tokenId}`;
 
-    const batchProvider = new JsonRpcBatchProvider(
-      provider.connection.url,
-      networkId,
-    );
-
     const nftMethods = new Contract(
       address,
       [
+        // 721
         'function ownerOf(uint256 tokenId) external view returns (address)',
+        // metadata
         'function name() public view returns (string memory)',
         'function symbol() public view returns (string memory)',
+        // introspection
+        'function supportsInterface(bytes4 interfaceId) returns (bool)',
+        // metadata
+        'function contractURI() returns (string)',
       ],
-      batchProvider,
+      provider,
     );
 
-    const data = await Promise.all([
-      nftMethods.functions.ownerOf(tokenId),
-      nftMethods.functions.name(),
-      nftMethods.functions.symbol(),
-    ]);
-
-    const ownerOf = data[0][0];
-    const name = data[1][0];
-    const symbol = data[2][0];
+    const is1155 = await orDefault(nftMethods.supportsInterface('0x4e2312e0'), false);
+    const owner = await orDefault(nftMethods.ownerOf(tokenId), undefined);
+    const name = await orDefault(nftMethods.name(), undefined);
+    const symbol = await orDefault(nftMethods.symbol(), undefined);
+    const contractURI = await orDefault(nftMethods.contractURI(), undefined);
 
     // @ts-ignore
     if (this.cacheManager.store.getClient) {
@@ -77,17 +82,19 @@ export class NftService {
     }
 
     const nftAgent = new Agent({
-      provider: batchProvider,
+      provider,
       timeout: 5000,
     });
     const agentResult = await nftAgent.fetchMetadata(address, tokenId);
     const result = {
       ...agentResult,
-      owner: ownerOf,
+      owner,
+      is1155,
       contract: {
         address,
         name,
         symbol,
+        contractURI
       },
     };
 

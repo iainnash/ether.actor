@@ -2,7 +2,7 @@ import { BadRequestException, CACHE_MANAGER, Inject, Injectable } from '@nestjs/
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
 import { AbiService } from 'src/abi/abi.service';
-import { BigNumber, Contract } from 'ethers';
+import { utils, BigNumber, Contract } from 'ethers';
 
 @Injectable()
 export class InteractionService {
@@ -13,12 +13,13 @@ export class InteractionService {
   ) {}
 
   async getContractData(
-    address: string,
+    addressInput: string,
     fnname: string,
     args: string[],
     host: string,
   ): Promise<any> {
     const networkId = this.ethereum.getNetworkId(host);
+    const address = utils.getAddress(addressInput);
     const abiObject = await this.abiService.getAbi(address, networkId);
     const contract = new Contract(
       address,
@@ -35,7 +36,7 @@ export class InteractionService {
         await redisStore.incr(`hits:${networkId}`);
         await redisStore.incr(`hits:${networkId}:${address}`);
       } catch (e: any) {
-        console.error(e);
+        console.log('has analytics error', e);
         // ignore error with analytics
       }
 

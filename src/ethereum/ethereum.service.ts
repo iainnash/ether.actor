@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   BINANCE_NETWORK,
   BINANCE_TESTNET_NETWORK,
+  Contract,
   EtherscanProvider,
   GOERLI_NETWORK,
   InjectEthersProvider,
@@ -12,6 +13,9 @@ import {
   ROPSTEN_NETWORK,
   StaticJsonRpcProvider,
 } from 'nestjs-ethers';
+
+import {ABI} from './multicall.api';
+
 
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
