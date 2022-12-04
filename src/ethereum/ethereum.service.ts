@@ -14,8 +14,6 @@ import {
   StaticJsonRpcProvider,
 } from 'nestjs-ethers';
 
-import {ABI} from './multicall.api';
-
 
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
