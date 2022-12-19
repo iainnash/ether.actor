@@ -17,6 +17,7 @@ import {
 import hljs from 'highlight.js/lib/common';
 const { solidity } = require('highlightjs-solidity');
 import { EthereumService } from 'src/ethereum/ethereum.service';
+import { utils } from 'ethers';
 
 hljs.registerLanguage('solidity', solidity);
 
@@ -24,6 +25,12 @@ const ERC20_ABI = require('erc-token-abis/abis/ERC20Base.json');
 const ERC721BASE_ABI = require('erc-token-abis/abis/ERC721Base.json');
 const ERC721FULL_ABI = require('erc-token-abis/abis/ERC721Full.json');
 const ERC1155Base_ABI = require('erc-token-abis/abis/ERC1155Base.json');
+
+const EIP1967_PROXY_STORAGE_SLOT =
+  '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc';
+
+const BYTES32_ZERO =
+  '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 const HTML_START = `
 <!DOCTYPE HTML>
@@ -117,24 +124,48 @@ export class AbiService {
         throw new NotFoundException('No contract found at address');
       }
 
+      let fetchedAddress = address as string;
+      // Only handles EIP1967 proxy slots – does not handle minimal proxies (EIP11)
+      const proxyAddress = await ethereumProvider.getStorageAt(
+        address,
+        EIP1967_PROXY_STORAGE_SLOT,
+      );
+      let impl;
+      if (proxyAddress != BYTES32_ZERO) {
+        impl = utils.hexZeroPad(utils.stripZeros(proxyAddress), 20);
+      }
+
+      let etherscanResult: any = undefined;
+      let originalResult: any = undefined;
+
       const etherscanProvider = this.ethereum.getEtherscanProvider(networkId);
-      const { abi: contractAbi, ...contractResult } =
-        await this.ethereum.getContractInfoEtherscan(
-          etherscanProvider,
-          address,
-        );
-      let proxyResult;
-      const impl = contractResult.info.Implementation;
+      if (!impl) {
+        etherscanResult =
+          await this.ethereum.getContractInfoEtherscan(
+            etherscanProvider,
+            address,
+          );
+        originalResult = etherscanResult;
+        if (!impl) {
+          impl = etherscanResult.info.Implementation;
+        }
+      }
+
       if (impl) {
-        proxyResult = await this.ethereum.getContractInfoEtherscan(
+        etherscanResult = await this.ethereum.getContractInfoEtherscan(
           etherscanProvider,
           impl,
         );
       }
-      let abi = contractAbi;
-      if (proxyResult) {
-        abi = [...abi, ...proxyResult.abi];
+
+      let {abi, ...contractResult} = etherscanResult;
+      if (originalResult && impl && etherscanResult) {
+        abi = [...originalResult.abi, etherscanResult.abi];
       }
+      // let abi = contractAbi;
+      // if (proxyResult) {
+      //   abi = [...abi, ...proxyResult.abi];
+      // }
 
       // let constructorArgsPretty;
       // try {
@@ -149,8 +180,7 @@ export class AbiService {
         info: contractResult.info,
         guessFromInterface: false,
         iface: [
-          ...getHumanAbi(contractAbi),
-          ...(proxyResult ? getHumanAbi(proxyResult.abi) : []),
+          ...getHumanAbi(abi),
         ],
         abi,
       };
