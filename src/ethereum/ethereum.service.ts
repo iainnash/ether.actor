@@ -14,7 +14,6 @@ import {
   StaticJsonRpcProvider,
 } from 'nestjs-ethers';
 
-
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
   if (this.network.chainId === MUMBAI_NETWORK.chainId) {
@@ -22,6 +21,9 @@ EtherscanProvider.prototype.getBaseUrl = function () {
   }
   if (this.network.chainId === MATIC_NETWORK.chainId) {
     return 'https://api.polygonscan.com/';
+  }
+  if (this.network.chainId === GOERLI_NETWORK.chainId) {
+    return 'http://api-goerli.etherscan.io/';
   }
   if (this.network.chainId === MAINNET_NETWORK.chainId) {
     return 'https://api.etherscan.io/';
