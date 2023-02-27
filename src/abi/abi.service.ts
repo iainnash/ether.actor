@@ -194,7 +194,7 @@ export class AbiService {
       const result = {
         constructorArgsPretty,
         info: contractResult.info,
-        // source: contractResult.source,
+        source: contractResult.source,
         guessFromInterface: false,
         iface: [...getHumanAbi(abi)],
         abi,
@@ -223,31 +223,34 @@ export class AbiService {
     address: string,
     isHTML: boolean = false,
   ): Promise<string> {
-    const abiResult = await this.getAbiFromHost(address, host);
+    const abiResult: any = await this.getAbiFromHost(address, host);
     if (abiResult['guessFromInterface']) {
       throw new NotFoundException();
     }
-    console.log({ abiResult });
-    // @ts-ignore
-    const { language, settings, sources } = abiResult.source;
-    const langChunk = `// Lang: ${language}`;
-    const optimizer = `// Settings: ${JSON.stringify(settings)}`;
 
-    const sourceChunks = Object.keys(sources)
-      .map(
-        (sourcePart) =>
-          `// ${sourcePart}\n` +
-          (isHTML
-            ? highlightCode(sources[sourcePart].content)
-            : sources[sourcePart].content),
-      )
-      .join('\n');
-    return [
-      isHTML ? HTML_START : '',
-      langChunk,
-      sourceChunks,
-      optimizer,
-      isHTML ? HTML_END : '',
-    ].join('\n');
+    let innerCode = '';
+
+    if (typeof abiResult.source === 'string') {
+      innerCode = abiResult.source;
+    } else {
+      // @ts-ignore
+      const { language, settings, sources } = abiResult.source;
+      const langChunk = `// Lang: ${language}`;
+      const optimizer = `// Settings: ${JSON.stringify(settings)}`;
+      const sourceChunks = Object.keys(sources)
+        .map(
+          (sourcePart) =>
+            `// ${sourcePart}\n` +
+            (isHTML
+              ? highlightCode(sources[sourcePart].content)
+              : sources[sourcePart].content),
+        )
+        .join('\n');
+      innerCode = [langChunk, sourceChunks, optimizer].join('\n');
+    }
+
+    return [isHTML ? HTML_START : '', innerCode, isHTML ? HTML_END : ''].join(
+      '\n',
+    );
   }
 }

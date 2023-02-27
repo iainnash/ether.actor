@@ -149,7 +149,7 @@ export class EthereumService {
     const abi = JSON.parse(ABI);
     // Don't ask me why...
     let source = SourceCode;
-    if (SourceCode[0] == '[') {
+    if (['[', '{'].includes(SourceCode[0])) {
       source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
     }
     return { abi, source, info };
