@@ -227,7 +227,7 @@ export class AbiService {
     if (abiResult['guessFromInterface']) {
       throw new NotFoundException();
     }
-    console.log({ abiResult });
+
     // @ts-ignore
     const { language, settings, sources } = abiResult.source;
     const langChunk = `// Lang: ${language}`;
