@@ -113,10 +113,9 @@ export class AbiService {
     address = getAddress(address);
     const cacheKey = `${networkId}:source:${address.toLowerCase()}`;
     // const abi = await this.cacheManager.get<object>(cacheKey);
-    let abi;
-    if (abi) {
-      return abi;
-    }
+    // if (abi) {
+    //   return abi;
+    // }
     const ethereumProvider = this.ethereum.getRpcService(networkId);
     try {
       const code = await ethereumProvider.getCode(address);
@@ -125,14 +124,24 @@ export class AbiService {
       }
 
       let fetchedAddress = address as string;
-      // Only handles EIP1967 proxy slots – does not handle minimal proxies (EIP11)
-      const proxyAddress = await ethereumProvider.getStorageAt(
-        address,
-        EIP1967_PROXY_STORAGE_SLOT,
-      );
       let impl;
-      if (proxyAddress != BYTES32_ZERO) {
-        impl = utils.hexZeroPad(utils.stripZeros(proxyAddress), 20);
+
+      if (code.length === 92) {
+        const proxy = code.match(
+          /^0x363d3d373d3d3d363d73([a-z0-9]{40})5af43d82803e903d91602b57fd5bf3/,
+        );
+        if (proxy && proxy.length === 2) {
+          impl = `0x${proxy[1]}`;
+        }
+      } else {
+        // Only handles EIP1967 proxy slots – does not handle minimal proxies (EIP11)
+        const proxyAddress = await ethereumProvider.getStorageAt(
+          address,
+          EIP1967_PROXY_STORAGE_SLOT,
+        );
+        if (proxyAddress != BYTES32_ZERO) {
+          impl = utils.hexZeroPad(utils.stripZeros(proxyAddress), 20);
+        }
       }
 
       let etherscanResult: any = undefined;
@@ -140,11 +149,10 @@ export class AbiService {
 
       const etherscanProvider = this.ethereum.getEtherscanProvider(networkId);
       if (!impl) {
-        etherscanResult =
-          await this.ethereum.getContractInfoEtherscan(
-            etherscanProvider,
-            address,
-          );
+        etherscanResult = await this.ethereum.getContractInfoEtherscan(
+          etherscanProvider,
+          address,
+        );
         originalResult = etherscanResult;
         if (!impl) {
           impl = etherscanResult.info.Implementation;
@@ -158,30 +166,37 @@ export class AbiService {
         );
       }
 
-      let {abi, ...contractResult} = etherscanResult;
+      let { abi, ...contractResult } = etherscanResult;
       if (originalResult && impl && etherscanResult) {
-        abi = [...originalResult.abi, etherscanResult.abi];
+        let etherscanKeys = etherscanResult.abi.map((item) => item.name);
+        abi = [
+          ...originalResult.abi.filter(
+            (item) =>
+              ['function', 'event', 'error'].includes(item.type) &&
+              !etherscanKeys.includes(item.name),
+          ),
+          ...etherscanResult.abi,
+        ];
       }
       // let abi = contractAbi;
       // if (proxyResult) {
       //   abi = [...abi, ...proxyResult.abi];
       // }
 
-      // let constructorArgsPretty;
-      // try {
-      //   constructorArgsPretty = new Interface(abi).decodeFunctionData(
-      //     '0x00000000',
-      //     contractResult.info.ConstructorArguments,
-      //   );
-      // } catch (e) {}
+      let constructorArgsPretty;
+      try {
+        constructorArgsPretty = new Interface(abi).decodeFunctionData(
+          '0x00000000',
+          contractResult.info.ConstructorArguments,
+        );
+      } catch (e) {}
 
       const result = {
-        // constructorArgsPretty,
+        constructorArgsPretty,
         info: contractResult.info,
+        // source: contractResult.source,
         guessFromInterface: false,
-        iface: [
-          ...getHumanAbi(abi),
-        ],
+        iface: [...getHumanAbi(abi)],
         abi,
       };
       await this.cacheManager.set(cacheKey, result, { ttl: impl ? 100 : 0 });
@@ -212,6 +227,7 @@ export class AbiService {
     if (abiResult['guessFromInterface']) {
       throw new NotFoundException();
     }
+    console.log({ abiResult });
     // @ts-ignore
     const { language, settings, sources } = abiResult.source;
     const langChunk = `// Lang: ${language}`;
