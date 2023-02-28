@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Headers, Param } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
 import { DecodeService } from './decode.service';
 
 @Controller()
@@ -21,6 +21,15 @@ export class DecodeController {
     @Headers('Host') host: string,
   ): Promise<object> {
     return await this.decodeService.decodeBytecodeWithContract(host, contract, bytecode);
+  }
+
+  @Post('/decode')
+  async getAbiDecode(
+    @Body('calldata') calldata: string,
+    @Body('contract') contract: string,
+    @Headers('Host') host: string
+  ): Promise<object> {
+    return await this.decodeService.decodeBytecodeWithContract(host, contract, calldata);
   }
 
 }
