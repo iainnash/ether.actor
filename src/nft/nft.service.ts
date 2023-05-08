@@ -2,7 +2,7 @@ import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Agent, addresses } from '@zoralabs/nft-metadata';
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
-import { Contract } from 'nestjs-ethers';
+import { EthersContract } from 'nestjs-ethers';
 
 async function orDefault<T>(asyncCall: any, fallback: T) {
   try {
@@ -42,7 +42,7 @@ export class NftService {
     const provider = this.ethereum.getProviderFromNetworkId(networkId);
     const cacheKey = `nft:${networkId}:${address.toLowerCase()}:${tokenId}`;
 
-    const nftMethods = new Contract(
+    const nftMethods = new EthersContract(provider).create(
       address,
       [
         // 721
@@ -55,7 +55,7 @@ export class NftService {
         // metadata
         'function contractURI() returns (string)',
       ],
-      provider,
+      provider as any,
     );
 
     const is1155 = await orDefault(nftMethods.supportsInterface('0x4e2312e0'), false);
@@ -82,7 +82,7 @@ export class NftService {
     }
 
     const nftAgent = new Agent({
-      provider,
+      provider: (provider as any),
       timeout: 5000,
     });
     const agentResult = await nftAgent.fetchMetadata(address, tokenId);

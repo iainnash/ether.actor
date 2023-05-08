@@ -3,12 +3,10 @@ import {
   EthersModule,
   GOERLI_NETWORK,
   MAINNET_NETWORK,
-  MATIC_NETWORK,
-  MUMBAI_NETWORK,
-  RINKEBY_NETWORK,
-  BINANCE_NETWORK,
+  POLYGON_NETWORK,
   SEPOLIA_NETWORK,
-  ROPSTEN_NETWORK,
+  MUMBAI_NETWORK,
+  BINANCE_NETWORK,
 } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
 
@@ -25,12 +23,6 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({
-      token: 'rinkeby',
-      network: RINKEBY_NETWORK.chainId,
-      custom: NETWORK_CONFIGS.rinkeby,
-      useDefaultProvider: false,
-    }),
-    EthersModule.forRoot({
       token: 'mumbai',
       network: MUMBAI_NETWORK.chainId,
       custom: NETWORK_CONFIGS.mumbai,
@@ -38,7 +30,7 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
     }),
     EthersModule.forRoot({
       token: 'polygon',
-      network: MATIC_NETWORK.chainId,
+      network: POLYGON_NETWORK.chainId,
       custom: NETWORK_CONFIGS.polygon,
       useDefaultProvider: false,
     }),
@@ -63,11 +55,6 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
     EthersModule.forRoot({
       token: 'sepolia',
       network: SEPOLIA_NETWORK,
-    }),
-    EthersModule.forRoot({
-      token: 'ropsten',
-      network: ROPSTEN_NETWORK,
-      custom: NETWORK_CONFIGS.ropsten,
     }),
     EthersModule.forRoot({
       token: 'kovan-optimism',

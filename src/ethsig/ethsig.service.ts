@@ -5,10 +5,10 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { utils } from 'ethers';
-import { Interface } from 'nestjs-ethers';
 import { HttpService } from '@nestjs/axios';
 import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
+import { Interface } from 'ethers/lib/utils';
 
 @Injectable()
 export class EthsigService {

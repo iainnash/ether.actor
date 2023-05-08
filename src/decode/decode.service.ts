@@ -1,8 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AbiService } from 'src/abi/abi.service';
 import { utils } from 'ethers';
-import { Interface } from 'nestjs-ethers';
 import { EthsigService } from 'src/ethsig/ethsig.service';
+import { Interface } from 'ethers/lib/utils';
 
 @Injectable()
 export class DecodeService {

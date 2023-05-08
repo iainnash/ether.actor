@@ -5,19 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import {
-  AddressZero,
-  Contract,
-  FormatTypes,
-  getAddress,
-  Interface,
-  isAddress,
-  Provider,
-} from 'nestjs-ethers';
 import hljs from 'highlight.js/lib/common';
 const { solidity } = require('highlightjs-solidity');
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { utils } from 'ethers';
+import { FormatTypes, Interface, getAddress, isAddress } from 'ethers/lib/utils';
+import { Provider } from '@ethersproject/providers';
+import { EthersContract } from 'nestjs-ethers';
 
 hljs.registerLanguage('solidity', solidity);
 
@@ -71,13 +65,12 @@ export class AbiService {
     address: string,
     rpcService: Provider,
   ): Promise<object> {
-    const guesserMethods = new Contract(
+    const guesserMethods = new EthersContract(rpcService).create(
       address,
       [
         'function supportsInterface(bytes4 interfaceID) external view returns (bool)',
         'function approve(address _spender, uint256 _value) public returns (bool success)',
       ],
-      rpcService,
     );
     // erc721
     try {
@@ -95,7 +88,7 @@ export class AbiService {
     }
 
     try {
-      await guesserMethods.callStatic.approve(AddressZero, '1');
+      await guesserMethods.callStatic.approve('0x0000000000000000000000000000000000000000', '1');
       return ERC20_ABI;
     } catch {
       return undefined;
