@@ -6,8 +6,8 @@ import {
   MATIC_NETWORK,
   MUMBAI_NETWORK,
   RINKEBY_NETWORK,
-  BINANCE_TESTNET_NETWORK,
   BINANCE_NETWORK,
+  SEPOLIA_NETWORK,
   ROPSTEN_NETWORK,
 } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
@@ -59,6 +59,10 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       network: GOERLI_NETWORK,
       custom: NETWORK_CONFIGS.goerli || 'https://goerli.prylabs.net',
       useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'sepolia',
+      network: SEPOLIA_NETWORK,
     }),
     EthersModule.forRoot({
       token: 'ropsten',
