@@ -37,7 +37,7 @@
     "highlight.js": "^11.3.1",
     "highlightjs-solidity": "git+https://github.com/iainnash/highlightjs-solidity",
     "isomorphic-fetch": "^3.0.0",
-    "nestjs-ethers": "^1.0.0",
+    "nestjs-ethers": "^2.0.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
