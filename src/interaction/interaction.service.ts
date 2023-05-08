@@ -1,9 +1,34 @@
-import { BadRequestException, CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
 import { AbiService } from 'src/abi/abi.service';
 import { utils, BigNumber, Contract } from 'ethers';
 
+function cleanupResult(result: any) {
+  if (result instanceof BigNumber) {
+    return result.toString();
+  }
+  if (Object.keys(result).filter((key: any) => Number.isNaN(+key)).length > 0) {
+    const keys = Object.keys(result);
+    console.log({ keys });
+    const output = {};
+    keys
+      .filter((key: any) => Number.isNaN(+key))
+      .forEach((filteredKey) => {
+        output[filteredKey] = cleanupResult(result[filteredKey]);
+      });
+    return output;
+  }
+  if (Array.isArray(result)) {
+    return result.map((item: any) => cleanupResult(item));
+  }
+  return result;
+}
 @Injectable()
 export class InteractionService {
   constructor(
@@ -40,14 +65,8 @@ export class InteractionService {
         // ignore error with analytics
       }
 
-      if (result instanceof BigNumber) {
-        return result.toString();
-      }
-      if (Array.isArray(result)) {
-        return result.map((item: any) =>
-          item instanceof BigNumber ? item.toString() : item,
-        );
-      }
+      return cleanupResult(result);
+
       return result;
     } catch (err) {
       console.error(err);
