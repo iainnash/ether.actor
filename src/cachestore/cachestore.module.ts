@@ -1,4 +1,5 @@
-import { CacheModule, CACHE_MANAGER, Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
+import { Module } from '@nestjs/common';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
