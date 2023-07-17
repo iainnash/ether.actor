@@ -3,14 +3,18 @@ import {
   EthersModule,
   GOERLI_NETWORK,
   MAINNET_NETWORK,
-  MATIC_NETWORK,
   MUMBAI_NETWORK,
-  RINKEBY_NETWORK,
   BINANCE_NETWORK,
   SEPOLIA_NETWORK,
-  ROPSTEN_NETWORK,
+  POLYGON_NETWORK,
+  OPTIMISM_GOERLI_NETWORK,
 } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
+import {
+  OPTIMISM_CHAIN,
+  ZORA_CHAIN,
+  ZORA_GOERLI_CHAIN,
+} from 'src/constants/chainid';
 
 const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
 
@@ -25,12 +29,6 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({
-      token: 'rinkeby',
-      network: RINKEBY_NETWORK.chainId,
-      custom: NETWORK_CONFIGS.rinkeby,
-      useDefaultProvider: false,
-    }),
-    EthersModule.forRoot({
       token: 'mumbai',
       network: MUMBAI_NETWORK.chainId,
       custom: NETWORK_CONFIGS.mumbai,
@@ -38,7 +36,7 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
     }),
     EthersModule.forRoot({
       token: 'polygon',
-      network: MATIC_NETWORK.chainId,
+      network: POLYGON_NETWORK.chainId,
       custom: NETWORK_CONFIGS.polygon,
       useDefaultProvider: false,
     }),
@@ -65,26 +63,35 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       network: SEPOLIA_NETWORK,
     }),
     EthersModule.forRoot({
-      token: 'ropsten',
-      network: ROPSTEN_NETWORK,
-      custom: NETWORK_CONFIGS.ropsten,
-    }),
-    EthersModule.forRoot({
-      token: 'kovan-optimism',
-      network: {
-        chainId: 69,
-        name: 'kovan-optimism',
-      },
-      custom: NETWORK_CONFIGS.kovan_optimism || 'https://kovan.optimism.io',
-      useDefaultProvider: false,
+      token: 'goerli-optimism',
+      network: OPTIMISM_GOERLI_NETWORK,
+      useDefaultProvider: true,
     }),
     EthersModule.forRoot({
       token: 'optimism',
       network: {
-        chainId: 10,
+        chainId: OPTIMISM_CHAIN,
         name: 'optimism',
       },
       custom: NETWORK_CONFIGS.optimism || 'https://mainnet.optimism.io',
+      useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'zora',
+      network: {
+        chainId: ZORA_CHAIN,
+        name: 'zora',
+      },
+      custom: 'https://rpc.zora.energy',
+      useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'zora-goerli',
+      network: {
+        chainId: ZORA_GOERLI_CHAIN,
+        name: 'zora',
+      },
+      custom: 'https://testnet.rpc.zora.energy',
       useDefaultProvider: false,
     }),
   ],

@@ -1,23 +1,19 @@
 import {
-  CACHE_MANAGER,
   Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import {
-  AddressZero,
-  Contract,
-  FormatTypes,
-  getAddress,
-  Interface,
-  isAddress,
-  Provider,
-} from 'nestjs-ethers';
 import hljs from 'highlight.js/lib/common';
 const { solidity } = require('highlightjs-solidity');
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { utils } from 'ethers';
+import { FormatTypes, Interface } from '@ethersproject/abi';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Contract } from '@ethersproject/contracts';
+import { Provider } from '@ethersproject/providers';
+import { AddressZero } from '@ethersproject/constants';
+import { getAddress, isAddress } from '@ethersproject/address';
 
 hljs.registerLanguage('solidity', solidity);
 
@@ -199,7 +195,7 @@ export class AbiService {
         iface: [...getHumanAbi(abi)],
         abi,
       };
-      await this.cacheManager.set(cacheKey, result, { ttl: impl ? 100 : 0 });
+      await this.cacheManager.set(cacheKey, result, impl ? 100 : 0);
       return result;
     } catch (err) {
       console.error(err);

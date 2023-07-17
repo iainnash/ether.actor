@@ -1,11 +1,11 @@
 import {
-  CACHE_MANAGER,
   Inject,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { utils } from 'ethers';
-import { Interface } from 'nestjs-ethers';
+import { Interface } from '@ethersproject/abi';
 import { HttpService } from '@nestjs/axios';
 import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
@@ -33,7 +33,7 @@ export class EthsigService {
       );
       signatureData = response.data;
 
-      this.cacheManager.set(cacheKey, signatureData, { ttl: 1000 });
+      this.cacheManager.set(cacheKey, signatureData, 1000);
     }
 
     const result = signatureData.result.function[signature];

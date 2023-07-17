@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  CACHE_MANAGER,
   Inject,
   Injectable,
 } from '@nestjs/common';
@@ -8,6 +7,7 @@ import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
 import { AbiService } from 'src/abi/abi.service';
 import { utils, BigNumber, Contract } from 'ethers';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 function cleanupResult(result: any) {
   if (result instanceof BigNumber) {

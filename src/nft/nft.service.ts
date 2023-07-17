@@ -1,8 +1,9 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Agent, addresses } from '@zoralabs/nft-metadata';
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { Cache } from 'cache-manager';
-import { Contract } from 'nestjs-ethers';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Contract } from '@ethersproject/contracts';
 
 async function orDefault<T>(asyncCall: any, fallback: T) {
   try {
@@ -99,7 +100,8 @@ export class NftService {
     };
 
     if (result) {
-      this.cacheManager.set(cacheKey, result, { ttl: 60 * 5 });
+      // 5 mins cache
+      this.cacheManager.set(cacheKey, result, 60 * 5);
     }
     return result;
   }
