@@ -11,6 +11,8 @@ import {
 } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
 import {
+  BASE_CHAIN,
+  BASE_GOERLI_CHAIN,
   OPTIMISM_CHAIN,
   ZORA_CHAIN,
   ZORA_GOERLI_CHAIN,
@@ -65,7 +67,8 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
     EthersModule.forRoot({
       token: 'goerli-optimism',
       network: OPTIMISM_GOERLI_NETWORK,
-      useDefaultProvider: true,
+      custom: NETWORK_CONFIGS.goerliOptimism || 'https://goerli.optimism.io',
+      useDefaultProvider: false,
     }),
     EthersModule.forRoot({
       token: 'optimism',
@@ -83,6 +86,24 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
         name: 'zora',
       },
       custom: 'https://rpc.zora.energy',
+      useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'base',
+      network: {
+        chainId: BASE_CHAIN,
+        name: 'base',
+      },
+      custom: 'https://mainnet.base.org',
+      useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'base-goerli',
+      network: {
+        chainId: BASE_GOERLI_CHAIN,
+        name: 'base-goerli',
+      },
+      custom: 'https://goerli.base.org',
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({

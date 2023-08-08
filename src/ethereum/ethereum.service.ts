@@ -9,7 +9,7 @@ import {
   MUMBAI_NETWORK,
 } from 'nestjs-ethers';
 import { EtherscanProvider, StaticJsonRpcProvider } from '@ethersproject/providers';
-import { OPTIMISM_CHAIN, OPTIMISM_GOERLI_CHAIN, ZORA_CHAIN, ZORA_GOERLI_CHAIN } from 'src/constants/chainid';
+import { OPTIMISM_CHAIN, OPTIMISM_GOERLI_CHAIN, ZORA_CHAIN, ZORA_GOERLI_CHAIN, BASE_CHAIN, BASE_GOERLI_CHAIN } from 'src/constants/chainid';
 
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
@@ -32,16 +32,25 @@ EtherscanProvider.prototype.getBaseUrl = function () {
     return 'https://api-testnet.bscscan.com/';
   }
   if (this.network.chainId === ZORA_CHAIN) {
-    return 'https://explorer.zora.energy/';
+    return 'https://explorer.zora.energy';
   }
   if (this.network.chainId === ZORA_GOERLI_CHAIN) {
-    return 'https://testnet.explorer.zora.energy/';
+    return 'https://testnet.explorer.zora.energy';
   }
   if (this.network.chainId === OPTIMISM_CHAIN) {
     return 'https://api-optimistic.etherscan.io/';
   }
   if (this.network.chainId === OPTIMISM_GOERLI_CHAIN) {
     return 'https://api-goerli-optimistic.etherscan.io/';
+  }
+  if (this.network.chainId === OPTIMISM_GOERLI_CHAIN) {
+    return 'https://api-goerli-optimistic.etherscan.io/';
+  }
+  if (this.network.chainId === BASE_GOERLI_CHAIN) {
+    return 'https://api-goerli.basescan.org/';
+  }
+  if (this.network.chainId === BASE_CHAIN) {
+    return 'https://api.basescan.org/';
   }
 
   throw new Error('undefined chain');
@@ -52,8 +61,6 @@ export class EthereumService {
   constructor(
     @InjectEthersProvider('ether')
     private readonly etherProvider: StaticJsonRpcProvider,
-    @InjectEthersProvider('rinkeby')
-    private readonly rinkebyProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('mumbai')
     private readonly mumbaiProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('polygon')
@@ -64,16 +71,16 @@ export class EthereumService {
     private readonly bscTestnetProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('optimism')
     private readonly optimismProvider: StaticJsonRpcProvider,
-    @InjectEthersProvider('kovan-optimism')
-    private readonly kovanOptimismProvider: StaticJsonRpcProvider,
-    @InjectEthersProvider('ropsten')
-    private readonly ropstenProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('goerli')
     private readonly goreliProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('zora')
     private readonly zoraProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('zora-goerli')
     private readonly zoraGoerliProvider: StaticJsonRpcProvider,
+    @InjectEthersProvider('base')
+    private readonly baseProvider: StaticJsonRpcProvider,
+    @InjectEthersProvider('base-goerli')
+    private readonly baseGoerliProvider: StaticJsonRpcProvider,
   ) {}
 
   getNetworkId(host: string) {
@@ -84,12 +91,8 @@ export class EthereumService {
       case 'mainnet':
       case 'homestead':
         return MAINNET_NETWORK.chainId;
-      // case 'rinkeby':
-      //   return RINKEBY_NETWORK.chainId;
       case 'optimism':
         return OPTIMISM_CHAIN;
-      case 'kovan-optimism':
-        return 69;
       case 'mumbai':
         return MUMBAI_NETWORK.chainId;
       case 'polygon':
@@ -106,6 +109,10 @@ export class EthereumService {
         return ZORA_CHAIN;
       case 'zora-goerli':
         return ZORA_GOERLI_CHAIN;
+      case 'base':
+        return BASE_CHAIN;
+      case 'base-goerli':
+        return BASE_GOERLI_CHAIN;
     }
     throw new NotFoundException();
   }
@@ -114,8 +121,6 @@ export class EthereumService {
     switch (networkId) {
       case MAINNET_NETWORK.chainId:
         return this.etherProvider;
-      // case RINKEBY_NETWORK.chainId:
-      //   return this.rinkebyProvider;
       case MUMBAI_NETWORK.chainId:
         return this.mumbaiProvider;
       case POLYGON_NETWORK.chainId:
@@ -126,23 +131,23 @@ export class EthereumService {
         return this.bscTestnetProvider;
       case GOERLI_NETWORK.chainId:
         return this.goreliProvider;
-      // case ROPSTEN_NETWORK.chainId:
-      //   return this.ropstenProvider;
       case ZORA_CHAIN:
         return this.zoraProvider;
       case ZORA_GOERLI_CHAIN:
         return this.zoraGoerliProvider;
       case OPTIMISM_CHAIN:
         return this.optimismProvider;
-      case 69:
-        return this.kovanOptimismProvider;
+      case BASE_CHAIN:
+        return this.baseProvider;
+      case BASE_GOERLI_CHAIN:
+        return this.baseGoerliProvider;
     }
   }
 
   getEtherscanProvider(networkId: number) {
-    const apiKey = JSON.parse(process.env.ETHERSCAN_API_KEYS_BY_NETWORK)[
+    const apiKey = JSON.parse(process.env.ETHERSCAN_API_KEYS_BY_NETWORK || '{}')[
       networkId
-    ];
+    ] || 'BLANK_API_KEY';
     const etherscanProvider = new EtherscanProvider(networkId, apiKey);
     return etherscanProvider;
   }
@@ -155,6 +160,7 @@ export class EthereumService {
       action: 'getsourcecode',
       address,
     });
+
     const { ABI, SourceCode, ...info } = sourceResult[0];
     const abi = JSON.parse(ABI);
     // Don't ask me why...
@@ -162,6 +168,7 @@ export class EthereumService {
     if (['[', '{'].includes(SourceCode[0])) {
       source = JSON.parse(SourceCode.substr(1, SourceCode.length - 2));
     }
+
     return { abi, source, info };
   }
 
