@@ -91,8 +91,12 @@ export class EthereumService {
       case 'mainnet':
       case 'homestead':
         return MAINNET_NETWORK.chainId;
+      // case 'rinkeby':
+      //   return RINKEBY_NETWORK.chainId;
       case 'optimism':
         return OPTIMISM_CHAIN;
+      case 'kovan-optimism':
+        return 69;
       case 'mumbai':
         return MUMBAI_NETWORK.chainId;
       case 'polygon':
@@ -121,6 +125,8 @@ export class EthereumService {
     switch (networkId) {
       case MAINNET_NETWORK.chainId:
         return this.etherProvider;
+      // case RINKEBY_NETWORK.chainId:
+      //   return this.rinkebyProvider;
       case MUMBAI_NETWORK.chainId:
         return this.mumbaiProvider;
       case POLYGON_NETWORK.chainId:
@@ -131,6 +137,8 @@ export class EthereumService {
         return this.bscTestnetProvider;
       case GOERLI_NETWORK.chainId:
         return this.goreliProvider;
+      // case ROPSTEN_NETWORK.chainId:
+      //   return this.ropstenProvider;
       case ZORA_CHAIN:
         return this.zoraProvider;
       case ZORA_GOERLI_CHAIN:
