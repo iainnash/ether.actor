@@ -52,7 +52,7 @@ li {
 <a class="github-fork-ribbon" href="https://github.com/iainnash/ether.actor" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 <p>powered by etherscan for ABIs and cloudflare for ethereum endpoints<p>
 <p>now querying ${hostFirst}. supports: <a href="https://ether.actor/">ethereum</a>, <a href="https://goerli.ether.actor">goerli</a>, <a href="https://polygon.ether.actor">polygon</a>, <a href="https://mumbai.ether.actor">mumbai</a></p>
-<p><a href="https://bsc.ether.actor/">bsc</a>, <a href="https://bsc-testnet.ether.actor">bsc-testnet</a>, <a href="https://kovan-optimism.ether.actor">kovan optimism</a>, <a href="https://optimism.ether.actor">optimism</a></p>
+<p><a href="https://bsc.ether.actor/">bsc</a>, <a href="https://bsc-testnet.ether.actor">bsc-testnet</a>, <a href="https://kovan-optimism.ether.actor">kovan optimism</a>, <a href="https://optimism.ether.actor">optimism</a>, <a href="https://arbitrum.ether.actor">arbitrum</a></p>
 <br />
 <p>try it:</p>
 <ul>
