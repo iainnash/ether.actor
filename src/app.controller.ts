@@ -9,6 +9,12 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('/stats')
+  async getStats(): Promise<object> {
+    const {hits, hitsOpStack} = await this.appService.getStats();
+    return {hits, hitsOpStack};
+  }
+
   @Get('/')
   getHomepage(
     @Headers('Host') host: string,
