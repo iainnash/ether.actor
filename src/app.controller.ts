@@ -29,6 +29,9 @@ export class AppController {
         <dt>op stack requests</dt>
         <dd>${opStackHits}</dd>
       <dl>
+      <p>
+        <a href="/">home</a>
+      </p>
     </body>
     </html>
     `

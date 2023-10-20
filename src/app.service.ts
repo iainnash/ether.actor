@@ -24,6 +24,6 @@ export class AppService {
       `hits:${OPTIMISM_CHAIN}`,
       `hits:${BASE_CHAIN}`,
     ]);
-    return {hits, opStackHits: zoraHits + optHits + baseHits};
+    return {hits, opStackHits: parseInt(zoraHits, 10) + parseInt(optHits, 10) + parseInt(baseHits, 10)};
   }
 }
