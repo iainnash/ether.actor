@@ -9,7 +9,7 @@ import {
   MUMBAI_NETWORK,
 } from 'nestjs-ethers';
 import { EtherscanProvider, StaticJsonRpcProvider } from '@ethersproject/providers';
-import { OPTIMISM_CHAIN, OPTIMISM_GOERLI_CHAIN, ZORA_CHAIN, ZORA_GOERLI_CHAIN, BASE_CHAIN, BASE_GOERLI_CHAIN } from 'src/constants/chainid';
+import { OPTIMISM_CHAIN, OPTIMISM_GOERLI_CHAIN, ZORA_CHAIN, ZORA_GOERLI_CHAIN, BASE_CHAIN, BASE_GOERLI_CHAIN, ARBITRUM_CHAIN } from 'src/constants/chainid';
 
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
@@ -52,6 +52,9 @@ EtherscanProvider.prototype.getBaseUrl = function () {
   if (this.network.chainId === BASE_CHAIN) {
     return 'https://api.basescan.org/';
   }
+  if (this.network.chainId === ARBITRUM_CHAIN) {
+    return 'https://api.arbiscan.io/';
+  }
 
   throw new Error('undefined chain');
 };
@@ -81,6 +84,8 @@ export class EthereumService {
     private readonly baseProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('base-goerli')
     private readonly baseGoerliProvider: StaticJsonRpcProvider,
+    @InjectEthersProvider('arbitrum')
+    private readonly arbitrumProvider: StaticJsonRpcProvider,
   ) {}
 
   getNetworkId(host: string) {
@@ -117,6 +122,8 @@ export class EthereumService {
         return BASE_CHAIN;
       case 'base-goerli':
         return BASE_GOERLI_CHAIN;
+      case 'arbitrum':
+        return ARBITRUM_CHAIN;
     }
     throw new NotFoundException();
   }
@@ -149,6 +156,8 @@ export class EthereumService {
         return this.baseProvider;
       case BASE_GOERLI_CHAIN:
         return this.baseGoerliProvider;
+      case ARBITRUM_CHAIN:
+        return this.arbitrumProvider;
     }
   }
 

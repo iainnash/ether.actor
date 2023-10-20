@@ -16,6 +16,7 @@ import {
   OPTIMISM_CHAIN,
   ZORA_CHAIN,
   ZORA_GOERLI_CHAIN,
+  ARBITRUM_CHAIN,
 } from 'src/constants/chainid';
 
 const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
@@ -113,6 +114,15 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
         name: 'zora',
       },
       custom: 'https://testnet.rpc.zora.energy',
+      useDefaultProvider: false,
+    }),
+    EthersModule.forRoot({
+      token: 'arbitrum',
+      network: {
+        chainId: ARBITRUM_CHAIN,
+        name: 'arbitrum',
+      },
+      custom: NETWORK_CONFIGS.arbitrum || 'https://arb1.arbitrum.io/rpc',
       useDefaultProvider: false,
     }),
   ],
