@@ -9,6 +9,34 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('/stats')
+  async getStats(): Promise<string> {
+    const {hits, opStackHits} = await this.appService.getStats();
+
+    return `
+    <!DOCTYPE HTML>
+    <html>
+    <head>
+    <title>ether.actor stats</title>
+    <meta name="description" content="Super simple Ethereum to HTTP bridge for fetching contract information. Powered by Etherscan for ABIs and Cloudflare for Ethereum endpoints.">
+    </head>
+    <body>
+      <h3>ether.actor stats</h3>
+      <dl style="font-size: 1.3em">
+        <dt>overall requests</dt>
+        <dd>${hits}</dd>
+
+        <dt>op stack requests</dt>
+        <dd>${opStackHits}</dd>
+      <dl>
+      <p>
+        <a href="/">home</a>
+      </p>
+    </body>
+    </html>
+    `
+  }
+
   @Get('/')
   getHomepage(
     @Headers('Host') host: string,
@@ -74,6 +102,7 @@ returns the result of the given function call (works for media too)</li>
 <li><a href="/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63/isApprovedForAll/0x18C8dF1fb7FB44549F90d1C2BB1DC8b690CD0559/0xd2d5cb7545685019a85601a0d279b24df019ec5e">/0x8d04a8c79ceb0889bdd12acdf3fa9d207ed3ff63/isApprovedForAll/0xADDRESS0/0xADDRESS1</a>
 <br />works with booleans and multiple arguments.
 </ul>
+
 
 <div style="margin-top: 20vh">
   <a href="https://twitter.com/isiain">a project by iain</a>
