@@ -12,7 +12,7 @@ import {
 import { EthereumService } from './ethereum.service';
 import {
   BASE_CHAIN,
-  BASE_GOERLI_CHAIN,
+  BASE_SEPOLIA_CHAIN,
   OPTIMISM_CHAIN,
   ZORA_CHAIN,
   ZORA_GOERLI_CHAIN,
@@ -98,12 +98,12 @@ const NETWORK_CONFIGS = JSON.parse(process.env.RPC_NETWORK_CONFIGS);
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({
-      token: 'base-goerli',
+      token: 'base-sepolia',
       network: {
-        chainId: BASE_GOERLI_CHAIN,
-        name: 'base-goerli',
+        chainId: BASE_SEPOLIA_CHAIN,
+        name: 'base-sepolia'
       },
-      custom: 'https://goerli.base.org',
+      custom: 'https://sepolia.base.org',
       useDefaultProvider: false,
     }),
     EthersModule.forRoot({

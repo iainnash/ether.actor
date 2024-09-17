@@ -9,7 +9,7 @@ import {
   MUMBAI_NETWORK,
 } from 'nestjs-ethers';
 import { EtherscanProvider, StaticJsonRpcProvider } from '@ethersproject/providers';
-import { OPTIMISM_CHAIN, OPTIMISM_GOERLI_CHAIN, ZORA_CHAIN, ZORA_GOERLI_CHAIN, BASE_CHAIN, BASE_GOERLI_CHAIN } from 'src/constants/chainid';
+import { OPTIMISM_CHAIN, OPTIMISM_GOERLI_CHAIN, ZORA_CHAIN, ZORA_GOERLI_CHAIN, BASE_CHAIN, BASE_SEPOLIA_CHAIN } from 'src/constants/chainid';
 
 // const last = EtherscanProvider.prototype.getBaseUrl;
 EtherscanProvider.prototype.getBaseUrl = function () {
@@ -46,8 +46,8 @@ EtherscanProvider.prototype.getBaseUrl = function () {
   if (this.network.chainId === OPTIMISM_GOERLI_CHAIN) {
     return 'https://api-goerli-optimistic.etherscan.io/';
   }
-  if (this.network.chainId === BASE_GOERLI_CHAIN) {
-    return 'https://api-goerli.basescan.org/';
+  if (this.network.chainId === BASE_SEPOLIA_CHAIN) {
+    return 'https://api-sepolia.basescan.org/';
   }
   if (this.network.chainId === BASE_CHAIN) {
     return 'https://api.basescan.org/';
@@ -79,8 +79,8 @@ export class EthereumService {
     private readonly zoraGoerliProvider: StaticJsonRpcProvider,
     @InjectEthersProvider('base')
     private readonly baseProvider: StaticJsonRpcProvider,
-    @InjectEthersProvider('base-goerli')
-    private readonly baseGoerliProvider: StaticJsonRpcProvider,
+    @InjectEthersProvider('base-sepolia')
+    private readonly baseSepoliaProvider: StaticJsonRpcProvider,
   ) {}
 
   getNetworkId(host: string) {
@@ -115,8 +115,8 @@ export class EthereumService {
         return ZORA_GOERLI_CHAIN;
       case 'base':
         return BASE_CHAIN;
-      case 'base-goerli':
-        return BASE_GOERLI_CHAIN;
+      case 'base-sepolia':
+        return BASE_SEPOLIA_CHAIN;
     }
     throw new NotFoundException();
   }
@@ -147,8 +147,8 @@ export class EthereumService {
         return this.optimismProvider;
       case BASE_CHAIN:
         return this.baseProvider;
-      case BASE_GOERLI_CHAIN:
-        return this.baseGoerliProvider;
+      case BASE_SEPOLIA_CHAIN:
+        return this.baseSepoliaProvider;
     }
   }
 
