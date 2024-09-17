@@ -19,12 +19,12 @@ export class EthsigService {
 
   async getSignatureForTxn(txn: string) {
     const signature = utils.hexDataSlice(txn, 0, 4);
-    const cacheKey = `sig:${signature}`;
+    const cacheKey = `openchain:sig:${signature}`;
     // let signatureData: any = await this.cacheManager.get(cacheKey);
     let signatureData: any = undefined;
     if (!signatureData) {
       const response = await firstValueFrom(
-        this.httpService.get(`https://sig.eth.samczsun.com/api/v1/signatures`, {
+        this.httpService.get(`https://api.openchain.xyz/signature-database/v1/lookup`, {
           params: {
             function: signature,
           },
